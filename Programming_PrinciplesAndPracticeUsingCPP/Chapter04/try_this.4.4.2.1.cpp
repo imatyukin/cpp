@@ -13,7 +13,7 @@ int main()
 
     while (i < 123) {
         c = i;
-        cout << c << " \t " << i << "\n";
+        cout << c << "\t" << i << "\n";
         ++i;
     }
 }
