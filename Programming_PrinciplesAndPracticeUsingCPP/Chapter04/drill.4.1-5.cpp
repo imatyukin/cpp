@@ -16,6 +16,7 @@ int main()
     double number2 = 0;
     double smallest = 0;
     double largest = 0;
+    double diff = 1.0/100;
 
     cout << "Введите два числа или '|' для выхода из программы:\n";
     while( cin.good() ) {
@@ -34,7 +35,6 @@ int main()
                     smallest = number2;
                 cout << "Наименьшее значение равно: " << smallest << endl;
                 cout << "Наибольшее значение равно: " << largest << endl;
-                double diff = 1.0/100;
                 if ((largest - smallest) <= diff)
                     cout << "Числа почти равны" << endl;
             } else {
