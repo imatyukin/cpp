@@ -26,7 +26,7 @@ int main() {
     double sum = 0;
     int counter = 0;
     bool is_first = true;
-    bool is_valid = true;
+    bool is_valid;
 
     cout << "Введите число и единицу измерения (cm, m, in, ft) или '|' для выхода:\n";
     while (cin >> number >> unit) {
@@ -52,7 +52,7 @@ int main() {
                 is_valid = false;
 
             if (is_valid) {
-                cout << number << unit << endl;
+                cout << number << " " << unit << endl;
                 numbers.push_back(number_conv);
                 sum += number_conv;
                 ++counter;
@@ -82,7 +82,6 @@ int main() {
             }
             else if (is_valid == false) {
                 cout << "Введена неправильная единица измерения" << endl;
-                is_valid = true;
             }
         }
     }
