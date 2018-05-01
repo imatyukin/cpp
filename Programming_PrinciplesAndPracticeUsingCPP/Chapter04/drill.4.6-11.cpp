@@ -15,7 +15,6 @@
 // 10. Keep all the values entered (converted into meters) in a vector. At the end, write out those values.
 // 11. Before writing out the values from the vector, sort them (that’ll make them come out in increasing order).
 #include "std_lib_facilities.h"
-#include <sstream>
 
 int main() {
     vector<double> numbers;
