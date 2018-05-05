@@ -13,15 +13,16 @@ int main() {
     while (cin>>temp)
         temps.push_back(temp);
 
-    cout << "Медиана равна " << nlogn_median(temps) << endl;
+    if (temps.size() == 0)
+        cout << "Вы не ввели ни одного числа." << endl;
+    else
+        cout << "Медиана равна " << nlogn_median(temps) << endl;
 }
 
 double nlogn_median(vector<double> list) {
     sort(list.begin(), list.end());
 
-    if (list.size() == 0)
-        return 0;
-    else if (list.size() % 2 == 1)
+    if (list.size() % 2 == 1)
         // медиана - середина массива при нечётном количестве элементов
         return list[list.size() / 2];
     else
