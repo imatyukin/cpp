@@ -5,14 +5,15 @@
 #include "std_lib_facilities.h"
 
 int main() {
-    int left = 1;
-    int right = 100;
-    int current;
+    int current;        // если =, то current = (left+right)/2
+    int left = 1;       // если >, то left = (left+right)/2 + 1
+    int right = 100;    // если <, то right = (left + right)/2 - 1
     char answer;
     bool True;
 
     cout << "Задумайте число от 1 до 100." << endl;
 
+    // Угадывает за log2(n) вопросов (при n=100 за 7 вопросов)
     while (!True) {
         current = (left+right) / 2;
         cout << "Задуманное число " << current << "? " << "('=', '<', '>')" << endl;
