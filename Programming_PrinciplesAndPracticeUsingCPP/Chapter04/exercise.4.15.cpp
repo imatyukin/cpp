@@ -57,7 +57,7 @@ int main() {
             break;
     }
 
-    for (int i = 0; i <= primeNums.size()-1; ++i)
+    for (int i = 0; i < primeNums.size(); ++i)
         cout << primeNums[i] << " ";
 
     return 0;
