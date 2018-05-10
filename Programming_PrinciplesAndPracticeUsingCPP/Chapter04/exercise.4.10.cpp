@@ -7,11 +7,11 @@
 // machine will make next.
 #include "std_lib_facilities.h"
 #include <random>
-std::random_device rd;
-std::mt19937 gen{rd()};
-std::uniform_int_distribution<> dis{0, 2};
 
 int main() {
+    random_device rd;
+    mt19937 gen{rd()};
+    uniform_int_distribution<> dis{0, 2};
     vector<string> rock_paper_scissors(2);
     rock_paper_scissors[0] = "Камень";
     rock_paper_scissors[1] = "Ножницы";
