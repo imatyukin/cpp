@@ -8,7 +8,6 @@
 int main(){
     double a, b, c = 0;
     double D = 0;
-    double x, x1, x2 = 0;
 
     cout << "Решение квадратного уравнения ax^2 + bx + c = 0." << endl;
     cout << "Введите коэффициенты a, b и c, причем a ≠ 0: " << endl;
@@ -29,12 +28,12 @@ int main(){
         cout << "Уравнение не имеет решений в действительных числах." << endl;
     else if (D == 0) {
         cout << "Уравнение имеет один корень, который вычисляется по формуле x = -b / 2a." << endl;
-        cout << "x = " << (x = -b / 2 * a) << endl;
+        cout << "x = " << (-b / 2 * a) << endl;
     }
     else if (D > 0) {
         cout << "Уравнение имеет два корня, которые вычисляются по формуле x1,2 = -b ± √D / 2a." << endl;
-        cout << "x1 = " << (x1 = (-b + sqrt(D)) / 2 * a) << endl;
-        cout << "x2 = " << (x2 = (-b - sqrt(D)) / 2 * a) << endl;
+        cout << "x1 = " << ((-b + sqrt(D)) / 2 * a) << endl;
+        cout << "x2 = " << ((-b - sqrt(D)) / 2 * a) << endl;
 
     }
 
