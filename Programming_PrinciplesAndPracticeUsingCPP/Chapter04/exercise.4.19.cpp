@@ -35,7 +35,6 @@ int main(){
         }
     }
 
-
     for (size_t index = 0; index < names.size() && index < scores.size(); index++)
     {
         cout << names[index]; cout << ", " << scores[index] << endl;
