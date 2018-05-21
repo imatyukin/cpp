@@ -19,7 +19,7 @@ int main(){
 
     for (size_t i = 0; i < names.size(); i++) {
         for (size_t j = 0; j < names.size(); j++) {
-            if (i != j && names[i] == names[j]){    // skip when it finds itself
+            if (i != j && names[i] == names[j]) {    // skip when it finds itself
                 // check if names[i] is already on the list
                 int m = 0;
                 for (size_t k = 0; k < entered_twice.size(); k++) {
