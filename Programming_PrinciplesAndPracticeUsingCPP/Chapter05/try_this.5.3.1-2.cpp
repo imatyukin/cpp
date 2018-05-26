@@ -1,4 +1,5 @@
 // Try to compile those examples and see how the compiler responds.
+
 // Try to compile those examples and see how the compiler responds. Try thinking of a few more errors yourself, and try
 // those.
 #include "std_lib_facilities.h"
