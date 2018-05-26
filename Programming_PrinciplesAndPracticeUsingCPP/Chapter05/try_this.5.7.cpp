@@ -20,7 +20,7 @@ int main()
         if (temp < low_temp) low_temp = temp;       // find low
     }
 
-    cout << "High temperature: " << high_temp<< '\n';
+    cout << "High temperature: " << high_temp << '\n';
     cout << "Low temperature: " << low_temp << '\n';
     cout << "Average temperature: " << sum/no_of_temps << '\n';
 }
