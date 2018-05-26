@@ -5,8 +5,8 @@ int area(int length, int width);        // calculate area of a rectangle
 
 int main()
 {
-    cout << "Площадь треугольника равна произведению половины основания треугольника (a) на его высоту (h)" << endl;
-    cout << "S = 0.5ah" << endl;
+    cout << "Площадь прямоугольника равна произведению его сторон (a, b): S = ab" << endl;
+    cout << endl;
 
     int s1 = area(7, 7);        // error: ) missing
     int s2 = area(6, 5);        // error: ; missing
@@ -21,6 +21,6 @@ int main()
 int area(int length, int width)
 {
     int s = 0;
-    s = 0.5 * width * length;
+    s = length * width;
     return s;
 }
