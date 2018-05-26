@@ -24,7 +24,5 @@ int main()
 
 int area(int length, int width)
 {
-    int s = 0;
-    s = length * width;
-    return s;
+    return length*width;
 }
