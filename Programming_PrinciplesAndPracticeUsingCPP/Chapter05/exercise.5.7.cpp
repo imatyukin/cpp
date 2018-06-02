@@ -29,7 +29,7 @@ double solutions(double a, double b, double c)
     D = pow(b, 2) - 4 * a * c;  // Discriminant
     if (D < 0) error("Уравнение не имеет решений в действительных числах.");
     else if (D == 0)
-        cout << "x = " << (-b / 2 * a) << endl;
+        cout << "x = " << (-b / (2 * a)) << endl;
     else {
         cout << "x1 = " << ((-b + sqrt(D)) / (2 * a)) << endl;
         cout << "x2 = " << ((-b - sqrt(D)) / (2 * a)) << endl;
