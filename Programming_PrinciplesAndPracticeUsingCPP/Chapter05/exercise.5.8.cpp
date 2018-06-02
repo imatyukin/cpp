@@ -16,8 +16,8 @@ int main()
     string theInput;
     vector<int> numbers;
     int number = 0;
+    int counter = 0;
     int sum = 0;
-    int counter;
 
     cout << "Введите количество суммируемых значений:" << endl;
     getline(cin, theInput);
