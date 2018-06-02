@@ -16,11 +16,11 @@ int main()
     }
     if (a == "°С") {
         t = ctof(t);
-        cout << t << "°F" << '\n';
+        cout << t << " °F" << '\n';
     }
     else if (a == "°F") {
         t = ftoc(t);
-        cout << t << "°С" << '\n';
+        cout << t << " °С" << '\n';
     }
     else error("Недопустимая единица измерения");
 
