@@ -25,7 +25,7 @@ double solutions(double a, double b, double c)
     double D = 0;
 
     if (a == 0) error("a не может быть равно 0.");
-    cout << "Уравнение " << a << "x^2 + " << b << "x + " << c << " = 0." << endl;
+    cout << "Уравнение " << a << "x^2 + " << b << "x + " << c << " = 0" << endl;
     D = pow(b, 2) - 4 * a * c;  // Discriminant
     if (D < 0) error("Уравнение не имеет решений в действительных числах.");
     else if (D == 0)
