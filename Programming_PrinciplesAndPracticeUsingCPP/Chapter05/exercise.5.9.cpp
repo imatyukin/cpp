@@ -47,7 +47,7 @@ int main()
     for (size_t i = 0; i < tokens.size(); i++)
     {
         if (tokens[i] != "|") {
-            int number = atoi(tokens.at(i).c_str());
+            number = atoi(tokens.at(i).c_str());
             numbers.push_back(number);
             counter++;
         }
