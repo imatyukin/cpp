@@ -22,7 +22,7 @@ int main()
     cout << "Введите количество суммируемых значений:" << endl;
     getline(cin, theInput);
     while (cin.fail() || cin.eof() || theInput.find_first_not_of("0123456789") != string::npos) {
-        cout << "Ошибка. Требуется ввести положительное число." << endl;
+        cout << "ОШИБКА -- Требуется ввести целое положительное число." << endl;
         if (theInput.find_first_not_of("0123456789") == string::npos) {
             cin.clear();
             cin.ignore(256,'\n');
@@ -44,8 +44,9 @@ int main()
         }
     }
 
-    if (N == 0) error ("Требуется просуммировать 0 чисел.");
-    else if (N > counter) error ("Требуется просуммировать чисел больше, чем сохранено в векторе.");
+    if (counter == 0) error ("ОШИБКА -- Вектор не содержит чисел.");
+    else if (N == 0) error ("ОШИБКА -- Требуется просуммировать 0 чисел.");
+    else if (N > counter) error ("ОШИБКА -- Требуется просуммировать чисел больше, чем сохранено в векторе.");
     else {
         cout << "Сумма первых " << N << " чисел (";
         for (size_t i = 0; i < N; ++i)

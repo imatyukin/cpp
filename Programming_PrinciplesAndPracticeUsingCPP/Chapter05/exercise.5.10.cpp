@@ -26,7 +26,7 @@ int main()
     string::size_type st;
     N = stoi(theInput,&st);
 
-    cout << "Введите несколько целых чисел (| для окончания ввода):" << endl;
+    cout << "Введите несколько чисел (| для окончания ввода):" << endl;
     while (cin.good()) {
         char c;
         c = cin.peek();
