@@ -6,6 +6,7 @@
 // digits correct and in the correct order.
 #include "std_lib_facilities.h"
 #include <string>
+#include <random>
 #include <algorithm>
 #include <cstdlib>
 
@@ -22,7 +23,8 @@ void game()
     string symbols = "0123456789";
     unsigned int const selection_length = 4;
 
-    random_shuffle(symbols.begin(), symbols.end());
+    mt19937 g{random_device{}()};
+    shuffle(symbols.begin(), symbols.end(), g);
     string selection = symbols.substr(0, selection_length);
     string guess;
     while (cout << "Ваша догадка? ", getline(cin, guess))
@@ -52,7 +54,7 @@ void game()
             return;
         }
     }
-    cerr << "Oops! Что-то пошло не так с вводом, или вы ввели end-of-file!\nВыход...\n";
+    cerr << "Ошибка ввода или введён end-of-file!\nВыход.\n";
     exit(EXIT_FAILURE);
 }
 
@@ -66,7 +68,7 @@ int main()
         {
             if (!getline(cin, answer))
             {
-                cout << "Я не могу получить ответ. Выход.\n";
+                cout << "Ответ не получен. Выход.\n";
                 return EXIT_FAILURE;
             }
             if (answer == "да" || answer == "Да" || answer == "д" || answer == "Д" ||
@@ -75,7 +77,7 @@ int main()
             if (answer == "нет" || answer == "Нет" || answer == "н" || answer == "Н" ||
                 answer == "no" || answer == "No" || answer == "n" || answer == "N")
             {
-                cout << "До свидания.\n";
+                cout << "Программа завершена.\n";
                 return EXIT_SUCCESS;
             }
             cout << "Ответьте «да» или «нет»: ";
