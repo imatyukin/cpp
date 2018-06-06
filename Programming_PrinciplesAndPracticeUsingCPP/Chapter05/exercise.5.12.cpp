@@ -5,10 +5,7 @@
 // right but in the wrong position (a cow). The guessing continues until the user gets four bulls, that is, has the four
 // digits correct and in the correct order.
 #include "std_lib_facilities.h"
-#include <string>
 #include <random>
-#include <algorithm>
-#include <cstdlib>
 
 bool contains_duplicates(string s)
 {
