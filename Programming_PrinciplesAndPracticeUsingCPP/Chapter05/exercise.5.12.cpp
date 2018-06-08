@@ -75,7 +75,7 @@ void get_chars(vector<char>& chars) {
         char c;
         cin >> c;
 
-        if (!isnumber(c)) {
+        if (!isdigit(c)) {
             string s{c};
             s = "Ошибка: неверный символ \"" + s + "\".";
             throw runtime_error(s);
