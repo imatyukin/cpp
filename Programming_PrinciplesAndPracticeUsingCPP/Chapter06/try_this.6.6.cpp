@@ -1,5 +1,6 @@
 // This first version of the calculator program (including get_token()) is available as file calculator00.cpp. Get it to
 // run and try it out.
+
 //
 // This is example code from Chapter 6.6 "Trying the first version" of
 // "Software - Principles and Practice using C++" by Bjarne Stroustrup
