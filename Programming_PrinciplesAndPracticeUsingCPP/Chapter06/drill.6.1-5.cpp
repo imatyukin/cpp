@@ -86,7 +86,7 @@ Token Token_stream::get()
     cin >> ch;    // note that >> skips whitespace (space, newline, tab, etc.)
 
     switch (ch) {
-        case ';':    // for "print"
+        case '=':    // for "print"
         case 'x':    // for "quit"
         case '(': case ')': case '+': case '-': case '*': case '/':
             return Token(ch);        // let each character represent itself
@@ -130,6 +130,8 @@ double primary()
         }
         case '8':            // we use '8' to represent a number
             return t.value;  // return the number's value
+        case 'x':
+            exit(0);
         default:
             error("primary expected");
     }
@@ -196,27 +198,32 @@ double expression()
 int main()
 try
 {
+    cout << "Добро пожаловать в программу-калькулятор!" << endl;
+    cout << "Вводите выражения с числами с плавающей точкой." << endl;
+    cout << "Доступны операторы: +, -, *, /, ()." << endl;
+    cout << "Для вывода результатов на экран нажмите '=' и для выхода из программы 'x'." << endl;
     double val = 0;
     while (cin) {
         Token t = ts.get();
 
-        if (t.kind == 'x') break; // 'q' for quit
-        if (t.kind == ';')        // ';' for "print now"
-            cout << "=" << val << '\n';
+        if (t.kind == 'x') break; // 'x' for quit
+        if (t.kind == '=')        // '=' for "print now"
+            cout << val << '\n';
         else
             ts.putback(t);
         val = expression();
     }
-    keep_window_open();
+    // keep_window_open();
+    return 0;
 }
 catch (exception& e) {
     cerr << "error: " << e.what() << '\n';
-    keep_window_open();
+    // keep_window_open();
     return 1;
 }
 catch (...) {
     cerr << "Oops: unknown exception!\n";
-    keep_window_open();
+    // keep_window_open();
     return 2;
 }
 
