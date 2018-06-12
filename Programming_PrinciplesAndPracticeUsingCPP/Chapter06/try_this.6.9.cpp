@@ -1,4 +1,10 @@
 // Get the calculator as presented above to run, see what it does, and try to figure out why it works as it does.
+
+//
+// This is example code from Chapter 6.7 "Trying the second version" of
+// "Programming -- Principles and Practice Using C++" by Bjarne Stroustrup
+//
+
 #include "std_lib_facilities.h"
 
 //------------------------------------------------------------------------------
