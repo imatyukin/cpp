@@ -117,10 +117,6 @@ int main() {
     return 0;
 }
 
-int parse_digit(char digit) {
-    return digit - '0';
-}
-
 int check_size(string str) {
     if (str.size() > 4) {
         error("ERROR: The number must consist of one, two, three or four digits.");
@@ -130,4 +126,8 @@ int check_size(string str) {
         return str.size();
     else
         return 0;
+}
+
+int parse_digit(char digit) {
+    return digit - '0';
 }
