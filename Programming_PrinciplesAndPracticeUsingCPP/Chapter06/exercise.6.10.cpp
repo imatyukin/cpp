@@ -9,9 +9,9 @@
 // were making a “banana split” sundae and wished to use three different flavors of ice cream out of five that you had,
 // you wouldn’t care if you used a scoop of vanilla at the beginning or the end; you would still have used vanilla. The
 // formula for combinations is
-//        P(a,b)
-// C(a,b)=------.
-//          b!
+//         P(a,b)
+// C(a,b)= ------.
+//           b!
 // Design a program that asks users for two numbers, asks them whether they want to calculate permutations or
 // combinations, and prints out the result. This will have several parts. Do an analysis of the above requirements.
 // Write exactly what the program will have to do. Then, go into the design phase. Write pseudo code for the program,
