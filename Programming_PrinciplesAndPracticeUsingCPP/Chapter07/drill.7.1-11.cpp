@@ -61,11 +61,14 @@ const string result = "= ";     // Используется для указан�
 const string declkey = "let";   // Ключевое слово let
 
 Token Token_stream::get()
+    // Чтение символов из cin и составление Token
 {
-    if (full) { full=false; return buffer; }
+    if (full) { full=false; return buffer; }    // Проверка наличия Token в буфере
     char ch;
-    cin >> ch;
+    cin >> ch;                                  // Заметим, что оператор >> пропускает пробельные символы
     switch (ch) {
+        case quit:
+        case print:
         case '(':
         case ')':
         case '+':
@@ -73,23 +76,15 @@ Token Token_stream::get()
         case '*':
         case '/':
         case '%':
-        case ';':
         case '=':
-            return Token(ch);
-        case '.':
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        {	cin.unget();    // Вернуть цифру во входной поток
+            return Token(ch);   // Каждый символ представляет сам себя
+        case '.':               // Число с плавающей точкой может начинаться с точки
+        // Числовой литерал:
+        case '0': case '1': case '2': case '3': case '4':
+        case '5': case '6': case '7': case '8': case '9':
+        {	cin.unget();    // Возврат цифры во входной поток
             double val;
-            cin >> val;     // Считать число с плавающей точкой
+            cin >> val;     // Чтение числа с плавающей точкой
             return Token(number,val);
         }
         default:
@@ -102,7 +97,7 @@ Token Token_stream::get()
                 if (s == "quit") return Token(name);
                 return Token(name,s);
             }
-            error("Bad token");
+            error("Неверная лексема");
     }
 }
 
