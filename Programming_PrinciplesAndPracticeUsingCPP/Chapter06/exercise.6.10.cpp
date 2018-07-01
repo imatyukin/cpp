@@ -19,7 +19,7 @@
 // generate good error messages.
 #include "std_lib_facilities.h"
 
-long double factorial(int n);
+constexpr long long factorial(int n);
 int permutations(int a, int b);
 int combinations(int a, int b);
 
@@ -61,14 +61,18 @@ catch (runtime_error e) {
     cout << e.what() << endl;
 }
 
-long double factorial(int n)
+constexpr long long factorial(int n)
 {
-    if (n < 0) // если введено отрицательное число
-        return 0; // возвращаем ноль
-    if (n == 0) // если введён ноль,
-        return 1; // возвращаем факториал от нуля равный 1
-    else // во всех остальных случаях
-        return n * factorial(n - 1); // делаем рекурсию.
+    long long result = 1;
+    for (int i = 1; i <= n; ++i) {
+        result *= i;
+    }
+    if (result < 1) {
+        error("переполнение переменной");
+        exit(0);
+    }
+    else
+        return result;
 }
 
 int permutations(int a, int b)
