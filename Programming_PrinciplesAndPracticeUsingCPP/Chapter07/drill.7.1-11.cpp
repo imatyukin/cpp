@@ -39,22 +39,26 @@ struct Token {
 };
 
 class Token_stream {
-    bool full;
-    Token buffer;
+private:
+    bool full;      // Есть ли лексема в буфере?
+    Token buffer;   // Хранит лексему, возвращённую вызовом putback()
 public:
     Token_stream() :full(0), buffer(0) { }
 
-    Token get();
-    void unget(Token t) { buffer=t; full=true; }
+    Token get();                                    // Считывает лексему
+    void unget(Token t) { buffer=t; full=true; }    // Возвращает лексему в поток
 
-    void ignore(char);
+    void ignore(char c);                            // Отбрасывает символы до символа c включительно
 };
 
-const char let = 'L';
-const char quit = 'Q';
-const char print = ';';
-const char number = '8';
-const char name = 'a';
+const char let = 'L';           // Лексема let
+const char quit = 'Q';          // t.kind==quit означает, что t - лексема выхода
+const char print = ';';         // t.kind==print означает, что t - лексема печати
+const char number = '8';        // t.kind==number означает, что t - число
+const char name = 'a';          // Лексема Имя
+const string prompt = "> ";     // Используется для указания на то, что далее следует ввод
+const string result = "= ";     // Используется для указания на то, что далее следует результат
+const string declkey = "let";   // Ключевое слово let
 
 Token Token_stream::get()
 {
@@ -83,9 +87,9 @@ Token Token_stream::get()
         case '7':
         case '8':
         case '9':
-        {	cin.unget();
+        {	cin.unget();    // Вернуть цифру во входной поток
             double val;
-            cin >> val;
+            cin >> val;     // Считать число с плавающей точкой
             return Token(number,val);
         }
         default:
@@ -163,7 +167,7 @@ double primary()
         case '-':
             return - primary();
         case number:
-            return t.value;
+            return t.value; // Возвращает значение числа
         case name:
             return get_value(t.name);
         default:
@@ -241,9 +245,6 @@ void clean_up_mess()
 {
     ts.ignore(print);
 }
-
-const string prompt = "> ";
-const string result = "= ";
 
 void calculate()
 {
