@@ -89,16 +89,15 @@ struct Token {
 };
 
 class Token_stream {
-private:
-    bool full;      // Есть ли лексема в буфере?
-    Token buffer;   // Хранит лексему, возвращённую вызовом putback()
 public:
     Token_stream() :full(0), buffer(0) { }
-
     Token get();                                    // Считывает лексему
     void unget(Token t) { buffer=t; full=true; }    // Возвращает лексему в поток
-
     void ignore(char c);                            // Отбрасывает символы до символа c включительно
+
+private:
+    bool full;                                      // Есть ли лексема в буфере?
+    Token buffer;                                   // Хранит лексему, возвращённую вызовом putback()
 };
 
 const char let = 'L';           // Лексема let
@@ -162,7 +161,7 @@ void Token_stream::ignore(char c)
     full = false;
 
     // Теперь проверяем входные данные:
-    char ch;
+    char ch = 0;
     while (cin>>ch)
         if (ch==c) return;
 }
@@ -298,11 +297,11 @@ double statement()
 {
     Token t = ts.get();
     switch(t.kind) {
-        case let:
-            return declaration();
-        default:
-            ts.unget(t);
-            return expression();
+    case let:
+        return declaration();
+    default:
+        ts.unget(t);
+        return expression();
     }
 }
 
@@ -313,34 +312,37 @@ void clean_up_mess()
 
 void calculate()    // Цикл вычисления выражения
 {
-    while(true) try {
-            cout << prompt;                         // Вывод приглашения
-            Token t = ts.get();
-            while (t.kind == print) t=ts.get();     // Отбрасывание команд вывода
-            if (t.kind == quit) return;             // Выход
-            ts.unget(t);
-            cout << result << statement() << endl;  // Вывод результатов
-        }
-        catch(runtime_error& e) {
-            cerr << e.what() << endl;   // Вывод сообщения об ошибке
-            clean_up_mess();
-        }
+    while(true)
+    try {
+        cout << prompt;                         // Вывод приглашения
+        Token t = ts.get();
+        while (t.kind == print)
+            t=ts.get();                         // Отбрасывание команд вывода
+        if (t.kind == quit) return;             // Выход
+        ts.unget(t);
+        cout << result << statement() << endl;  // Вывод результатов
+    }
+    catch(runtime_error& e) {
+        cerr << e.what() << endl;   // Вывод сообщения об ошибке
+        clean_up_mess();
+    }
 }
 
 int main()
-
 try {
     // Предопределённые имена
     define_name("pi",3.1415926535);
     define_name("e",2.7182818284);
+    define_name("k",1000);
 
     calculate();
+
     return 0;
 }
 catch (exception& e) {
     cerr << "исключение: " << e.what() << endl;
     char c;
-    while (cin >>c&& c!=';') ;
+    while (cin>>c && c!=';') ;
     return 1;
 }
 catch (...) {
