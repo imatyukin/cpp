@@ -80,10 +80,8 @@ struct Token {
 
     // Инициализирует kind символом ch
     Token(char ch) :kind(ch) { }
-
     // Инициализирует kind и value
     Token(char ch, double val) :kind(ch), value(val) { }
-
     // Инициализирует kind и name
     Token(char ch, string n) :kind(ch), name(n) { }
 };
@@ -116,37 +114,38 @@ Token Token_stream::get()
     char ch;
     cin >> ch;                                  // Заметим, что оператор >> пропускает пробельные символы
     switch (ch) {
-        case quit:
-        case print:
-        case '(':
-        case ')':
-        case '+':
-        case '-':
-        case '*':
-        case '/':
-        case '%':
-        case '=':
-            return Token(ch);   // Каждый символ представляет сам себя
-        case '.':               // Число с плавающей точкой может начинаться с точки
-        // Числовой литерал:
-        case '0': case '1': case '2': case '3': case '4':
-        case '5': case '6': case '7': case '8': case '9':
-        {	cin.unget();    // Возврат цифры во входной поток
+    case quit:
+    case print:
+    case '(':
+    case ')':
+    case '+':
+    case '-':
+    case '*':
+    case '/':
+    case '%':
+    case '=':
+        return Token(ch);   // Каждый символ представляет сам себя
+    case '.':               // Число с плавающей точкой может начинаться с точки
+    // Числовой литерал:
+    case '0': case '1': case '2': case '3': case '4':
+    case '5': case '6': case '7': case '8': case '9':
+        {
+            cin.unget();    // Возврат цифры во входной поток
             double val;
             cin >> val;     // Чтение числа с плавающей точкой
             return Token(number,val);
         }
-        default:
-            if (isalpha(ch)) {
-                string s;
-                s += ch;
-                while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s+=ch;
-                cin.unget();
-                if (s == declkey) return Token(let);    // Ключевое слово объявления
-                if (s == "quit") return Token(name);
-                return Token(name,s);
-            }
-            error("Неверная лексема");
+    default:
+        if (isalpha(ch)) {
+            string s;
+            s += ch;
+            while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s+=ch;
+            cin.unget();
+            if (s == declkey) return Token(let);    // Ключевое слово объявления
+            if (s == "quit") return Token(name);
+            return Token(name,s);
+        }
+        error("Неверная лексема");
     }
 }
 
@@ -217,19 +216,21 @@ double primary()
 {
     Token t = ts.get();
     switch (t.kind) {
-        case '(':   // Обработка правила '(' Выражение ')'
-        {	double d = expression();
+    case '(':                                           // Обработка правила '(' Выражение ')'
+        {
+            double d = expression();
             t = ts.get();
             if (t.kind != ')') error("'(' требуется");
+            return d;
         }
-        case '-':
-            return - primary();
-        case number:
-            return t.value; // Возвращает значение числа
-        case name:
-            return get_value(t.name);
-        default:
-            error("требуется первичное выражение");
+    case '-':
+        return - primary();
+    case number:
+        return t.value;                                 // Возвращает значение числа
+    case name:
+        return get_value(t.name);
+    default:
+        error("требуется первичное выражение");
     }
 }
 
@@ -239,18 +240,19 @@ double term()
     while(true) {
         Token t = ts.get();
         switch(t.kind) {
-            case '*':
-                left *= primary();
-                break;
-            case '/':
-            {	double d = primary();
+        case '*':
+            left *= primary();
+            break;
+        case '/':
+            {
+                double d = primary();
                 if (d == 0) error("деление на нуль");
                 left /= d;
                 break;
             }
-            default:
-                ts.unget(t);
-                return left;
+        default:
+            ts.unget(t);
+            return left;
         }
     }
 }
@@ -261,15 +263,15 @@ double expression()
     while(true) {
         Token t = ts.get();
         switch(t.kind) {
-            case '+':
-                left += term();
-                break;
-            case '-':
-                left -= term();
-                break;
-            default:
-                ts.unget(t);
-                return left;
+        case '+':
+            left += term();
+            break;
+        case '-':
+            left -= term();
+            break;
+        default:
+            ts.unget(t);
+            return left;
         }
     }
 }
@@ -310,7 +312,7 @@ void clean_up_mess()
     ts.ignore(print);
 }
 
-void calculate()    // Цикл вычисления выражения
+void calculate()                                // Цикл вычисления выражения
 {
     while(true)
     try {
@@ -323,7 +325,7 @@ void calculate()    // Цикл вычисления выражения
         cout << result << statement() << endl;  // Вывод результатов
     }
     catch(runtime_error& e) {
-        cerr << e.what() << endl;   // Вывод сообщения об ошибке
+        cerr << e.what() << endl;               // Вывод сообщения об ошибке
         clean_up_mess();
     }
 }
