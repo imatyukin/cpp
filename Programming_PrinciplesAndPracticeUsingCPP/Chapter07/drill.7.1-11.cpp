@@ -22,7 +22,55 @@
 
 	We have inserted 3 bugs that the compiler will catch and 3 that it won't.
 */
-
+/*
+ * Простой калькулятор
+ *
+ * Эта программа реализует основные выражения калькулятора.
+ * Ввод осуществляется из потока cin; вывод - в поток cout.
+ *
+ * Грамматика для ввода:
+ *
+ * Вычисление:
+ *      Инструкция
+ *      Вывод
+ *      Выход
+ *      Вычисление Инструкция
+ *
+ * Инструкция:
+ *      Объявление
+ *      Выражение
+ *
+ * Объявление:
+ *      "let" Имя "=" Выражение
+ *
+ * Вывод:
+ *      ;
+ *
+ * Выход:
+ *      Q
+ *
+ * Выражение:
+ *      Терм
+ *      Выражение + Терм
+ *      Выражение - Терм
+ *
+ * Терм:
+ *      Первичное_выражение
+ *      Терм * Первичное_выражение
+ *      Терм / Первичное_выражение
+ *      Терм % Первичное_выражение
+ *
+ * Первичное_выражение:
+ *      Число
+ *      ( Выражение )
+ *      - Первичное_выражение
+ *      + Первичное_выражение
+ *
+ * Число:
+ *      Литерал_с_плавающей_точкой
+ *
+ * Ввод из потока cin через Token_stream с именем ts.
+ */
 #include "std_lib_facilities.h"
 
 struct Token {
@@ -32,8 +80,10 @@ struct Token {
 
     // Инициализирует kind символом ch
     Token(char ch) :kind(ch) { }
+
     // Инициализирует kind и value
     Token(char ch, double val) :kind(ch), value(val) { }
+
     // Инициализирует kind и name
     Token(char ch, string n) :kind(ch), name(n) { }
 };
@@ -93,7 +143,7 @@ Token Token_stream::get()
                 s += ch;
                 while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s=ch;
                 cin.unget();
-                if (s == "let") return Token(let);
+                if (s == declkey) return Token(let);    // Ключевое слово объявления
                 if (s == "quit") return Token(name);
                 return Token(name,s);
             }
@@ -102,13 +152,16 @@ Token Token_stream::get()
 }
 
 void Token_stream::ignore(char c)
+    // Символ c представляет разновидность лексем
 {
+    // Сначала проверяем буфер:
     if (full && c==buffer.kind) {
         full = false;
         return;
     }
     full = false;
 
+    // Теперь проверяем входные данные:
     char ch;
     while (cin>>ch)
         if (ch==c) return;
@@ -123,27 +176,38 @@ struct Variable {
 vector<Variable> names;
 
 double get_value(string s)
+    // Возвращает значение переменной с именем s
 {
     for (int i = 0; i<names.size(); ++i)
         if (names[i].name == s) return names[i].value;
-    error("get: undefined name ",s);
+    error("get: неопределённая переменная ",s);
 }
 
 void set_value(string s, double d)
+    // Присваивает объекту s типа Variable значение d
 {
     for (int i = 0; i<=names.size(); ++i)
         if (names[i].name == s) {
             names[i].value = d;
             return;
         }
-    error("set: undefined name ",s);
+    error("set: неопределённая переменная ",s);
 }
 
 bool is_declared(string s)
+    // Есть ли переменная s в векторе names
 {
     for (int i = 0; i<names.size(); ++i)
         if (names[i].name == s) return true;
     return false;
+}
+
+double define_name(string var, double val)
+    // Добавляем пару (var,val) в вектор names
+{
+    if (is_declared(var)) error(var," повторное объявление");
+    names.push_back(Variable(var,val));
+    return val;
 }
 
 Token_stream ts;
@@ -154,10 +218,10 @@ double primary()
 {
     Token t = ts.get();
     switch (t.kind) {
-        case '(':
+        case '(':   // Обработка правила '(' Выражение ')'
         {	double d = expression();
             t = ts.get();
-            if (t.kind != ')') error("'(' expected");
+            if (t.kind != ')') error("'(' требуется");
         }
         case '-':
             return - primary();
@@ -166,7 +230,7 @@ double primary()
         case name:
             return get_value(t.name);
         default:
-            error("primary expected");
+            error("требуется первичное выражение");
     }
 }
 
@@ -181,7 +245,7 @@ double term()
                 break;
             case '/':
             {	double d = primary();
-                if (d == 0) error("divide by zero");
+                if (d == 0) error("деление на нуль");
                 left /= d;
                 break;
             }
@@ -212,13 +276,16 @@ double expression()
 }
 
 double declaration()
+    // Считаем, что мы уже встретили ключевое слово "let"
+    // Обрабатываем: Имя = Выражение
+    // Объявление переменной с Именем с начальным значением, заданным Выражением
 {
     Token t = ts.get();
-    if (t.kind != 'a') error ("name expected in declaration");
+    if (t.kind != 'a') error ("в объявлении ожидается имя переменной");
     string name = t.name;
     if (is_declared(name)) error(name, " declared twice");
     Token t2 = ts.get();
-    if (t2.kind != '=') error("= missing in declaration of " ,name);
+    if (t2.kind != '=') error("пропущен символ = в объявлении " ,name);
     double d = expression();
     names.push_back(Variable(name,d));
     return d;
@@ -241,18 +308,18 @@ void clean_up_mess()
     ts.ignore(print);
 }
 
-void calculate()
+void calculate()    // Цикл вычисления выражения
 {
     while(true) try {
-            cout << prompt;
+            cout << prompt;                         // Вывод приглашения
             Token t = ts.get();
-            while (t.kind == print) t=ts.get();
-            if (t.kind == quit) return;
+            while (t.kind == print) t=ts.get();     // Отбрасывание команд вывода
+            if (t.kind == quit) return;             // Выход
             ts.unget(t);
-            cout << result << statement() << endl;
+            cout << result << statement() << endl;  // Вывод результатов
         }
         catch(runtime_error& e) {
-            cerr << e.what() << endl;
+            cerr << e.what() << endl;   // Вывод сообщения об ошибке
             clean_up_mess();
         }
 }
@@ -260,17 +327,21 @@ void calculate()
 int main()
 
 try {
+    // Предопределённые имена
+    define_name("pi",3.1415926535);
+    define_name("e",2.7182818284);
+
     calculate();
     return 0;
 }
 catch (exception& e) {
-    cerr << "exception: " << e.what() << endl;
+    cerr << "исключение: " << e.what() << endl;
     char c;
     while (cin >>c&& c!=';') ;
     return 1;
 }
 catch (...) {
-    cerr << "exception\n";
+    cerr << "исключение\n";
     char c;
     while (cin>>c && c!=';');
     return 2;
