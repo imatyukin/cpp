@@ -141,7 +141,7 @@ Token Token_stream::get()
             if (isalpha(ch)) {
                 string s;
                 s += ch;
-                while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s=ch;
+                while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s+=ch;
                 cin.unget();
                 if (s == declkey) return Token(let);    // Ключевое слово объявления
                 if (s == "quit") return Token(name);
@@ -281,13 +281,16 @@ double declaration()
     // Объявление переменной с Именем с начальным значением, заданным Выражением
 {
     Token t = ts.get();
-    if (t.kind != 'a') error ("в объявлении ожидается имя переменной");
-    string name = t.name;
-    if (is_declared(name)) error(name, " объявлена дважды");
+    if (t.kind != name) error ("в объявлении ожидается имя переменной");
+    string var_name = t.name;
+
+    if (is_declared(var_name)) error(var_name, " объявлена дважды");
+
     Token t2 = ts.get();
-    if (t2.kind != '=') error("пропущен символ = в объявлении " ,name);
+    if (t2.kind != '=') error("пропущен символ = в объявлении " ,var_name);
+
     double d = expression();
-    names.push_back(Variable(name,d));
+    define_name(var_name,d);
     return d;
 }
 
