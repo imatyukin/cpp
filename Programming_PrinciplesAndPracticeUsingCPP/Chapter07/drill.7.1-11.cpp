@@ -283,7 +283,7 @@ double declaration()
     Token t = ts.get();
     if (t.kind != 'a') error ("в объявлении ожидается имя переменной");
     string name = t.name;
-    if (is_declared(name)) error(name, " declared twice");
+    if (is_declared(name)) error(name, " объявлена дважды");
     Token t2 = ts.get();
     if (t2.kind != '=') error("пропущен символ = в объявлении " ,name);
     double d = expression();
