@@ -89,30 +89,30 @@ struct Token {
 class Token_stream {
 public:
     Token_stream() :full(0), buffer(0) { }
-    Token get();                                    // Считывает лексему
-    void unget(Token t) { buffer=t; full=true; }    // Возвращает лексему в поток
-    void ignore(char c);                            // Отбрасывает символы до символа c включительно
+    Token get();                                        // Считывает лексему
+    void unget(Token t) { buffer=t; full=true; }        // Возвращает лексему в поток
+    void ignore(char c);                                // Отбрасывает символы до символа c включительно
 
 private:
-    bool full;                                      // Есть ли лексема в буфере?
-    Token buffer;                                   // Хранит лексему, возвращённую вызовом putback()
+    bool full;                                          // Есть ли лексема в буфере?
+    Token buffer;                                       // Хранит лексему, возвращённую вызовом putback()
 };
 
-const char let = 'L';           // Лексема let
-const char quit = 'Q';          // t.kind==quit означает, что t - лексема выхода
-const char print = ';';         // t.kind==print означает, что t - лексема печати
-const char number = '8';        // t.kind==number означает, что t - число
-const char name = 'a';          // Лексема Имя
-const string prompt = "> ";     // Используется для указания на то, что далее следует ввод
-const string result = "= ";     // Используется для указания на то, что далее следует результат
-const string declkey = "let";   // Ключевое слово let
+const char let = 'L';                                   // Лексема let
+const char quit = 'Q';                                  // t.kind==quit означает, что t - лексема выхода
+const char print = ';';                                 // t.kind==print означает, что t - лексема печати
+const char number = '8';                                // t.kind==number означает, что t - число
+const char name = 'a';                                  // Лексема Имя
+const string prompt = "> ";                             // Используется для указания на то, что далее следует ввод
+const string result = "= ";                             // Используется для указания на то, что далее следует результат
+const string declkey = "let";                           // Ключевое слово let
 
 Token Token_stream::get()
     // Чтение символов из cin и составление Token
 {
-    if (full) { full=false; return buffer; }    // Проверка наличия Token в буфере
+    if (full) { full=false; return buffer; }            // Проверка наличия Token в буфере
     char ch;
-    cin >> ch;                                  // Заметим, что оператор >> пропускает пробельные символы
+    cin >> ch;                                          // Заметим, что оператор >> пропускает пробельные символы
     switch (ch) {
     case quit:
     case print:
@@ -124,15 +124,15 @@ Token Token_stream::get()
     case '/':
     case '%':
     case '=':
-        return Token(ch);   // Каждый символ представляет сам себя
-    case '.':               // Число с плавающей точкой может начинаться с точки
+        return Token(ch);                               // Каждый символ представляет сам себя
+    case '.':                                           // Число с плавающей точкой может начинаться с точки
     // Числовой литерал:
     case '0': case '1': case '2': case '3': case '4':
     case '5': case '6': case '7': case '8': case '9':
         {
-            cin.unget();    // Возврат цифры во входной поток
+            cin.unget();                                // Возврат цифры во входной поток
             double val;
-            cin >> val;     // Чтение числа с плавающей точкой
+            cin >> val;                                 // Чтение числа с плавающей точкой
             return Token(number,val);
         }
     default:
@@ -141,7 +141,7 @@ Token Token_stream::get()
             s += ch;
             while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s+=ch;
             cin.unget();
-            if (s == declkey) return Token(let);    // Ключевое слово объявления
+            if (s == declkey) return Token(let);        // Ключевое слово объявления
             if (s == "quit") return Token(name);
             return Token(name,s);
         }
@@ -312,20 +312,20 @@ void clean_up_mess()
     ts.ignore(print);
 }
 
-void calculate()                                // Цикл вычисления выражения
+void calculate()                                        // Цикл вычисления выражения
 {
     while(true)
     try {
-        cout << prompt;                         // Вывод приглашения
+        cout << prompt;                                 // Вывод приглашения
         Token t = ts.get();
         while (t.kind == print)
-            t=ts.get();                         // Отбрасывание команд вывода
-        if (t.kind == quit) return;             // Выход
+            t=ts.get();                                 // Отбрасывание команд вывода
+        if (t.kind == quit) return;                     // Выход
         ts.unget(t);
-        cout << result << statement() << endl;  // Вывод результатов
+        cout << result << statement() << endl;          // Вывод результатов
     }
     catch(runtime_error& e) {
-        cerr << e.what() << endl;               // Вывод сообщения об ошибке
+        cerr << e.what() << endl;                       // Вывод сообщения об ошибке
         clean_up_mess();
     }
 }
