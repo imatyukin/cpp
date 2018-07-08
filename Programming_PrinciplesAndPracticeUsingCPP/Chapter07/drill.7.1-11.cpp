@@ -43,7 +43,7 @@
  * Вывод:
  *      ;
  * Выход:
- *      Q
+ *      exit
  * Выражение:
  *      Терм
  *      Выражение + Терм
@@ -101,9 +101,10 @@ const char square_root = 's';                           // Лексема ква
 const char power = 'p';                                 // Лексема функции возведения в степень
 const string prompt = "> ";                             // Используется для указания на то, что далее следует ввод
 const string result = "= ";                             // Используется для указания на то, что далее следует результат
-const string declkey = "let";                           // Ключевое слово let
+const string declkey = "#";                             // Ключевой символ #
 const string sqrtkey = "sqrt";                          // Ключевое слово sqrt
 const string powkey = "pow";                            // Ключевое слово pow
+const string quitkey = "exit";                          // Ключевое слово exit
 
 Token Token_stream::get()
     // Чтение символов из cin и составление Token
@@ -112,7 +113,6 @@ Token Token_stream::get()
     char ch;
     cin >> ch;                                              // Заметим, что оператор >> пропускает пробельные символы
     switch (ch) {
-    case quit:
     case print:
     case '(':
     case ')':
@@ -144,7 +144,7 @@ Token Token_stream::get()
             if (s == declkey) return Token(let);            // Ключевое слово объявления
             if (s == sqrtkey) return Token(square_root);    // Ключевое слово квадратного корня
             if (s == powkey) return Token(power);           // Ключевое слово возведения в степень
-            if (s == "quit") return Token(name);
+            if (s == quitkey) return Token(quit);           // Ключевое слово выхода
             return Token(name,s);
         }
         error("Неверная лексема");
