@@ -59,6 +59,7 @@
  *      - Первичное_выражение
  *      + Первичное_выражение
  *      sqrt( Выражение )
+ *      pow( Выражение , Целочисленный_литерал )
  * Число:
  *      Литерал_с_плавающей_точкой
  *
@@ -82,26 +83,27 @@ struct Token {
 class Token_stream {
 public:
     Token_stream() :full(0), buffer(0) { }
-    Token get();                                            // Считывает лексему
-    void unget(Token t) { buffer=t; full=true; }            // Возвращает лексему в поток
-    void ignore(char c);                                    // Отбрасывает символы до символа c включительно
+    Token get();                                        // Считывает лексему
+    void unget(Token t) { buffer=t; full=true; }        // Возвращает лексему в поток
+    void ignore(char c);                                // Отбрасывает символы до символа c включительно
 
 private:
-    bool full;                                              // Есть ли лексема в буфере?
-    Token buffer;                                           // Хранит лексему, возвращённую вызовом putback()
+    bool full;                                          // Есть ли лексема в буфере?
+    Token buffer;                                       // Хранит лексему, возвращённую вызовом putback()
 };
 
-const char let = 'L';                                       // Лексема let
-const char quit = 'Q';                                      // t.kind==quit означает, что t - лексема выхода
-const char print = ';';                                     // t.kind==print означает, что t - лексема печати
-const char number = '8';                                    // t.kind==number означает, что t - число
-const char name = 'a';                                      // Лексема Имя
-const char square_root = 's';                               // Лексема квадратного корня
-const string prompt = "> ";                                 // Используется для указания на то, что далее следует ввод
-const string result = "= ";                                 // Используется для указания на то, что далее следует
-                                                            // результат
-const string declkey = "let";                               // Ключевое слово let
-const string sqrtkey = "sqrt";                              // Ключевое слово sqrt
+const char let = 'L';                                   // Лексема let
+const char quit = 'Q';                                  // t.kind==quit означает, что t - лексема выхода
+const char print = ';';                                 // t.kind==print означает, что t - лексема печати
+const char number = '8';                                // t.kind==number означает, что t - число
+const char name = 'a';                                  // Лексема Имя
+const char square_root = 's';                           // Лексема квадратного корня
+const char power = 'p';                                 // Лексема функции возведения в степень
+const string prompt = "> ";                             // Используется для указания на то, что далее следует ввод
+const string result = "= ";                             // Используется для указания на то, что далее следует результат
+const string declkey = "let";                           // Ключевое слово let
+const string sqrtkey = "sqrt";                          // Ключевое слово sqrt
+const string powkey = "pow";                            // Ключевое слово pow
 
 Token Token_stream::get()
     // Чтение символов из cin и составление Token
@@ -120,6 +122,7 @@ Token Token_stream::get()
     case '/':
     case '%':
     case '=':
+    case ',':
         return Token(ch);                                   // Каждый символ представляет сам себя
     case '.':                                               // Число с плавающей точкой может начинаться с точки
     // Числовой литерал:
@@ -139,11 +142,14 @@ Token Token_stream::get()
             cin.unget();
             if (s == declkey) return Token(let);            // Ключевое слово объявления
             if (s == sqrtkey) return Token(square_root);    // Ключевое слово квадратного корня
+            if (s == powkey) return Token(power);           // Ключевое слово возведения в степень
             if (s == "quit") return Token(name);
             return Token(name,s);
         }
         error("Неверная лексема");
     }
+
+    return 0;
 }
 
 void Token_stream::ignore(char c)
@@ -176,6 +182,8 @@ double get_value(string s)
     for (int i = 0; i<names.size(); ++i)
         if (names[i].name == s) return names[i].value;
     error("get: неопределённая переменная ",s);
+
+    return 0;
 }
 
 void set_value(string s, double d)
@@ -213,7 +221,9 @@ double primary()
 {
     Token t = ts.get();
     switch (t.kind) {
-    case '(':                                               // Обработка правила '(' Выражение ')'
+    case number:
+        return t.value;                             // Возвращает значение числа
+    case '(':                                       // Обработка правила '(' Выражение ')'
         {
             double d = expression();
             t = ts.get();
@@ -224,7 +234,7 @@ double primary()
         return - primary();
     case '+':
         return primary();
-    case square_root:
+    case square_root:                               // Обработка правила 'sqrt(' Выражение ')'
         {
             t = ts.get();
             if (t.kind != '(') error("'(' требуется");
@@ -235,13 +245,28 @@ double primary()
             if (t.kind != ')') error("')' требуется");
             return sqrt(d);
         }
-    case number:
-        return t.value;                                     // Возвращает значение числа
+    case power:                                     // Обработка правила 'pow(' Выражение ',' Целочисленный_литерал ')'
+        {
+            t = ts.get();
+            if (t.kind != '(') error("'(' требуется");
+            double d = expression();
+            t = ts.get();
+            if (t.kind != ',') error("',' требуется");
+            t = ts.get();
+            if (t.kind != number) error("второй аргумент pow() должен быть целым числом");
+            int i = int(t.value);
+            if (t.value != i) error("второй аргумент pow() должен быть целым числом");
+            t = ts.get();
+            if (t.kind != ')') error("')' требуется");
+            return pow(d,i);
+        }
     case name:
         return get_value(t.name);
     default:
         error("требуется первичное выражение");
     }
+
+    return 0;
 }
 
 double term()
@@ -322,20 +347,20 @@ void clean_up_mess()
     ts.ignore(print);
 }
 
-void calculate()                                            // Цикл вычисления выражения
+void calculate()                                    // Цикл вычисления выражения
 {
     while(true)
     try {
-        cout << prompt;                                     // Вывод приглашения
+        cout << prompt;                             // Вывод приглашения
         Token t = ts.get();
         while (t.kind == print)
-            t=ts.get();                                     // Отбрасывание команд вывода
-        if (t.kind == quit) return;                         // Выход
+            t=ts.get();                             // Отбрасывание команд вывода
+        if (t.kind == quit) return;                 // Выход
         ts.unget(t);
-        cout << result << statement() << endl;              // Вывод результатов
+        cout << result << statement() << endl;      // Вывод результатов
     }
     catch(runtime_error& e) {
-        cerr << e.what() << endl;                           // Вывод сообщения об ошибке
+        cerr << e.what() << endl;                   // Вывод сообщения об ошибке
         clean_up_mess();
     }
 }
