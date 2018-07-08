@@ -39,7 +39,7 @@
  *      Объявление
  *      Выражение
  * Объявление:
- *      "let" Имя "=" Выражение
+ *      # Имя "=" Выражение
  * Вывод:
  *      ;
  * Выход:
@@ -92,7 +92,7 @@ private:
     Token buffer;                                       // Хранит лексему, возвращённую вызовом putback()
 };
 
-const char let = 'L';                                   // Лексема let
+const char let = '#';                                   // Лексема let
 const char quit = 'Q';                                  // t.kind==quit означает, что t - лексема выхода
 const char print = ';';                                 // t.kind==print означает, что t - лексема печати
 const char number = '8';                                // t.kind==number означает, что t - число
@@ -123,6 +123,7 @@ Token Token_stream::get()
     case '%':
     case '=':
     case ',':
+    case '#':
         return Token(ch);                                   // Каждый символ представляет сам себя
     case '.':                                               // Число с плавающей точкой может начинаться с точки
     // Числовой литерал:
