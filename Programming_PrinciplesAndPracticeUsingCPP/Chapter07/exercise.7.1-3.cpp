@@ -109,10 +109,10 @@ const string quitkey = "exit";                          // Ключевое сл
 Token Token_stream::get()
 // Чтение символов из cin и составление Token
 {
-    if (full) { full=false; return buffer; }                // Проверка наличия Token в буфере
+    if (full) { full=false; return buffer; }                   // Проверка наличия Token в буфере
     char ch;
-    cin >> ch;                                              // Заметим, что оператор >> пропускает пробельные символы
-                                                            // (space, newline, tab и т.д.)
+    cin >> ch;                                                 // Заметим, что оператор >> пропускает пробельные символы
+                                                               // (space, newline, tab и т.д.)
     switch (ch) {
         case print:
         case '(':
@@ -125,29 +125,29 @@ Token Token_stream::get()
         case '=':
         case ',':
         case '#':
-            return Token(ch);                                   // Каждый символ представляет сам себя
-        case '.':                                               // Число с плавающей точкой может начинаться с точки
+            return Token(ch);                                  // Каждый символ представляет сам себя
+        case '.':                                              // Число с плавающей точкой может начинаться с точки
             // Числовой литерал:
         case '0': case '1': case '2': case '3': case '4':
         case '5': case '6': case '7': case '8': case '9':
         {
-            cin.unget();                                    // Возврат цифры во входной поток
+            cin.unget();                                       // Возврат цифры во входной поток
             double val;
-            cin >> val;                                     // Чтение числа с плавающей точкой
+            cin >> val;                                        // Чтение числа с плавающей точкой
             return Token(number,val);
         }
         default:
-            if (isalpha(ch)) {                                  // Начало с буквы
+            if (isalpha(ch)) {                                 // Начало с буквы
                 string s;
                 s += ch;
                 // Буквы, цифры и символы подчёркивания
                 while(cin.get(ch) && (isalpha(ch) || isdigit(ch) || ch=='_')) s+=ch;
                 cin.unget();
-                if (s == declkey) return Token(let);            // Ключевое слово объявления "let"
-                if (s == constkey) return Token(con);           // Ключевое слово объявления "const"
-                if (s == sqrtkey) return Token(square_root);    // Ключевое слово квадратного корня
-                if (s == powkey) return Token(power);           // Ключевое слово возведения в степень
-                if (s == quitkey) return Token(quit);           // Ключевое слово выхода
+                if (s == declkey) return Token(let);           // Ключевое слово объявления "let"
+                if (s == constkey) return Token(con);          // Ключевое слово объявления "const"
+                if (s == sqrtkey) return Token(square_root);   // Ключевое слово квадратного корня
+                if (s == powkey) return Token(power);          // Ключевое слово возведения в степень
+                if (s == quitkey) return Token(quit);          // Ключевое слово выхода
                 return Token(name,s);
             }
             error("Неверная лексема");
@@ -179,7 +179,7 @@ void Token_stream::ignore(char c)
 struct Variable {
     string name;
     double value;
-    bool var;                                       // переменная (true) или константа (false)
+    bool var;                                           // переменная (true) или константа (false)
     Variable(string n, double v, bool va = true) :name(n), value(v), var(va) { }
 };
 
@@ -235,11 +235,11 @@ double define_name(string s, double val, bool var=true)
 
 //------------------------------------------------------------------------------
 
-Token_stream ts;                                    // обеспечивает get() и unget()
+Token_stream ts;                                        // обеспечивает get() и unget()
 
 //------------------------------------------------------------------------------
 
-double expression();                                // Декларируется так, чтобы primary() мог вызывать expression()
+double expression();                                    // Декларируется так, чтобы primary() мог вызывать expression()
 
 //------------------------------------------------------------------------------
 
@@ -248,7 +248,7 @@ double primary()
 {
     Token t = ts.get();
     switch (t.kind) {
-    case '(':                                       // Обработка правила '(' Выражение ')'
+    case '(':                                        // Обработка правила '(' Выражение ')'
         {
             double d = expression();
             t = ts.get();
@@ -256,25 +256,25 @@ double primary()
             return d;
         }
     case number:
-        return t.value;                             // Возвращает значение числа
+        return t.value;                              // Возвращает значение числа
     case name:
         {
             Token next = ts.get();
-            if (next.kind == '=') {                 // Обработка правила name = expression
+            if (next.kind == '=') {                  // Обработка правила name = expression
                 double d = expression();
                 set_value(t.name,d);
                 return d;
             }
             else {
-                ts.unget(next);                     // не назначен: вернуть значение
-                return get_value(t.name);           // вернуть значение переменной
+                ts.unget(next);                      // не назначен: вернуть значение
+                return get_value(t.name);            // вернуть значение переменной
             }
         }
     case '-':
         return - primary();
     case '+':
         return primary();
-    case square_root:                               // Обработка правила 'sqrt(' Выражение ')'
+    case square_root:                                // Обработка правила 'sqrt(' Выражение ')'
         {
             t = ts.get();
             if (t.kind != '(') error("'(' требуется");
@@ -285,7 +285,7 @@ double primary()
             if (t.kind != ')') error("')' требуется");
             return sqrt(d);
         }
-    case power:                                 // Обработка правила 'pow(' Выражение ',' Целочисленный_литерал ')'
+    case power:                                      // Обработка правила 'pow(' Выражение ',' Целочисленный_литерал ')'
         {
             t = ts.get();
             if (t.kind != '(') error("'(' требуется");
@@ -313,7 +313,7 @@ double term()
 // Для работы с *, / и %
 {
     double left = primary();
-    Token t = ts.get();                     // Получает следующий токен из потока токенов
+    Token t = ts.get();                                 // Получает следующий токен из потока токенов
 
     while(true) {
         switch(t.kind) {
@@ -339,7 +339,7 @@ double term()
                 break;
             }
         default:
-            ts.unget(t);                    // Помещает t обратно в поток токенов
+            ts.unget(t);                                // Помещает t обратно в поток токенов
             return left;
         }
     }
@@ -350,22 +350,22 @@ double term()
 double expression()
 // Для работы с + and -
 {
-    double left = term();                   // Читает и оценивает Term
-    Token t = ts.get();                     // Получает следующий токен из потока токенов
+    double left = term();                               // Читает и оценивает Term
+    Token t = ts.get();                                 // Получает следующий токен из потока токенов
 
     while(true) {
         switch(t.kind) {
         case '+':
-            left += term();                 // Оценивает Term и складывает
+            left += term();                             // Оценивает Term и складывает
             t = ts.get();
             break;
         case '-':
-            left -= term();                 // Оценивает Term и вычитает
+            left -= term();                             // Оценивает Term и вычитает
             t = ts.get();
             break;
         default:
-            ts.unget(t);                    // Помещает t обратно в поток токенов
-            return left;                    // Окончательно: нет + или -: возвращает ответ
+            ts.unget(t);                                // Помещает t обратно в поток токенов
+            return left;                                // Окончательно: нет + или -: возвращает ответ
         }
     }
 }
