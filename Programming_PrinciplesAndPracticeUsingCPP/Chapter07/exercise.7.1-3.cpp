@@ -5,7 +5,6 @@
 // distinguishes between constants and variables and check for it in set_value(). If you want to let the user define
 // constants (rather than just having pi and e defined as constants), you’ll have to add a notation to let the user
 // express that, for example, const pi = 3.14;.
-
 /*
  * Простой калькулятор
  *
