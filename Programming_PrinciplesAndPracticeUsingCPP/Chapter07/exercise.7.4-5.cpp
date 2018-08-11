@@ -188,11 +188,10 @@ struct Variable {
     Variable(string n, double v, bool b) :name(n), value(v), is_const(b) { }
 };
 
-
 //------------------------------------------------------------------------------
 
-// Тип для names и связанных функций
 class Symbol_table {
+// Тип для names и связанных функций
 public:
     double get(string s);                               // Возвращает значение переменной s
     void set(string s, double d);                       // Устанавливает переменную s в d
@@ -216,8 +215,8 @@ double Symbol_table::get(string s)
 
 //------------------------------------------------------------------------------
 
-// Устанавливает переменную s в d
 void Symbol_table::set(string s, double d)
+// Устанавливает переменную s в d
 {
     for (int i = 0; i<names.size(); ++i)
         if (names[i].name == s) {
@@ -230,8 +229,8 @@ void Symbol_table::set(string s, double d)
 
 //------------------------------------------------------------------------------
 
-// var уже в names?
 bool Symbol_table::is_declared(string var)
+// var уже в names?
 {
     for (int i = 0; i<names.size(); ++i)
         if (names[i].name == var) return true;
@@ -240,8 +239,8 @@ bool Symbol_table::is_declared(string var)
 
 //------------------------------------------------------------------------------
 
-// Добавить (var,val) в names
 double Symbol_table::declare(string var, double val, bool b)
+// Добавить (var,val) в names
 {
     if (is_declared(var)) error(var," повторное объявление");
     names.push_back(Variable(var,val,b));
