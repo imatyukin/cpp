@@ -4,6 +4,8 @@
 // 5. Modify Token_stream::get() to return Token(print) when it sees a newline. This implies looking for whitespace
 // characters and treating newline ('\n') specially. You might find the standard library function isspace(ch), which
 // returns true if ch is a whitespace character, useful.
+// 6. Part of what every program should do is to provide some way of helping its user. Have the calculator print out
+// some instructions for how to use the calculator if the user presses the H key (both upper- and lowercase).
 
 /*
  * Простой калькулятор
@@ -17,6 +19,7 @@
  *      Инструкция
  *      Вывод
  *      Выход
+ *      Помощь
  *      Вычисление Инструкция
  * Инструкция:
  *      Объявление
@@ -28,6 +31,8 @@
  *      ;
  * Выход:
  *      exit
+ * Помощь
+ *      help
  * Выражение:
  *      Терм
  *      Выражение + Терм
@@ -93,6 +98,7 @@ private:
 const char let = '#';                                   // Лексема декларации let
 const char con = 'C';                                   // Лексема декларации const
 const char quit = 'Q';                                  // t.kind==quit означает, что t - лексема выхода
+const char help = 'h';                                  // Лексема помощи
 const char print = ';';                                 // t.kind==print означает, что t - лексема печати
 const char number = '8';                                // t.kind==number означает, что t - числовая лексема
 const char name = 'a';                                  // Лексема Имя
@@ -105,6 +111,7 @@ const string constkey = "const";                        // Ключевое сл
 const string sqrtkey = "sqrt";                          // Ключевое слово sqrt
 const string powkey = "pow";                            // Ключевое слово pow
 const string quitkey = "exit";                          // Ключевое слово exit
+const string helpkey = "help";                          // Ключевое слово help
 
 //------------------------------------------------------------------------------
 
@@ -119,6 +126,10 @@ Token Token_stream::get()
         cin.get(ch);
     }
     switch (ch) {
+        case 'H':
+            return Token(help);
+        case 'h':
+            return Token(help);
         case print:
         case '(':
         case ')':
@@ -152,6 +163,7 @@ Token Token_stream::get()
                 if (s == constkey) return Token(con);         // Ключевое слово объявления "const"
                 if (s == sqrtkey) return Token(square_root);  // Ключевое слово квадратного корня
                 if (s == powkey) return Token(power);         // Ключевое слово возведения в степень
+                if (s == helpkey) return Token(help);         // Ключевое слово помощи
                 if (s == quitkey) return Token(quit);         // Ключевое слово выхода
                 return Token(name,s);
             }
@@ -438,6 +450,15 @@ void clean_up_mess()
 
 //------------------------------------------------------------------------------
 
+void print_help()
+{
+    cout << "Инструкции: введите выражение и нажмите Enter.\n";
+    cout << "Вы также можете ввести переменные используя\n";
+    cout << "символ '#' и константы с ключевым словом 'const'\n";
+}
+
+//------------------------------------------------------------------------------
+
 void calculate()
 // Цикл вычисления выражения
 {
@@ -447,9 +468,12 @@ void calculate()
             Token t = ts.get();
             while (t.kind == print)
                 t=ts.get();                             // Отбрасывание команд вывода
-            if (t.kind == quit) return;                 // Выход
-            ts.unget(t);
-            cout << result << statement() << endl;      // Вывод результатов
+            if (t.kind == help) print_help();           // Вывод инструкций помощи
+            else {
+                if (t.kind == quit) return;             // Выход
+                ts.unget(t);
+                cout << result << statement() << endl;  // Вывод результатов
+            }
         }
         catch(exception& e) {
             cerr << e.what() << endl;                   // Вывод сообщения об ошибке
