@@ -1,6 +1,9 @@
 // 4. The get_value(), set_value(), is_declared(), and define_name() functions all operate on the variable var_table.
 // Define a class called Symbol_table with a member var_table of type vector<Variable> and member functions get(),
 // set(), is_declared(), and declare(). Rewrite the calculator to use a variable of type Symbol_table.
+// 5. Modify Token_stream::get() to return Token(print) when it sees a newline. This implies looking for whitespace
+// characters and treating newline ('\n') specially. You might find the standard library function isspace(ch), which
+// returns true if ch is a whitespace character, useful.
 
 /*
  * Простой калькулятор
@@ -108,10 +111,13 @@ const string quitkey = "exit";                          // Ключевое сл
 Token Token_stream::get()
 // Чтение символов из cin и составление Token
 {
-    if (full) { full=false; return buffer; }                   // Проверка наличия Token в буфере
+    if (full) { full=false; return buffer; }            // Проверка наличия Token в буфере
     char ch;
-    cin >> ch;                                                 // Заметим, что оператор >> пропускает пробельные символы
-                                                               // (space, newline, tab и т.д.)
+    cin.get(ch);                                        // Заметим, что cin.get() НЕ пропускает пробельные символы
+    while (isspace(ch)) {
+        if (ch == '\n') return Token(print);            // Если обнаружена новая строка, возвращает print токен
+        cin.get(ch);
+    }
     switch (ch) {
         case print:
         case '(':
@@ -124,29 +130,29 @@ Token Token_stream::get()
         case '=':
         case ',':
         case '#':
-            return Token(ch);                                  // Каждый символ представляет сам себя
-        case '.':                                              // Число с плавающей точкой может начинаться с точки
-            // Числовой литерал:
+            return Token(ch);                           // Каждый символ представляет сам себя
+        case '.':                                       // Число с плавающей точкой может начинаться с точки
+        // Числовой литерал:
         case '0': case '1': case '2': case '3': case '4':
         case '5': case '6': case '7': case '8': case '9':
         {
-            cin.unget();                                       // Возврат цифры во входной поток
+            cin.unget();                                // Возврат цифры во входной поток
             double val;
-            cin >> val;                                        // Чтение числа с плавающей точкой
+            cin >> val;                                 // Чтение числа с плавающей точкой
             return Token(number,val);
         }
         default:
-            if (isalpha(ch)) {                                 // Начало с буквы
+            if (isalpha(ch)) {                          // Начало с буквы
                 string s;
                 s += ch;
                 // Буквы, цифры и символы подчёркивания
                 while(cin.get(ch) && (isalpha(ch) || isdigit(ch) || ch=='_')) s+=ch;
                 cin.unget();
-                if (s == declkey) return Token(let);           // Ключевое слово объявления "let"
-                if (s == constkey) return Token(con);          // Ключевое слово объявления "const"
-                if (s == sqrtkey) return Token(square_root);   // Ключевое слово квадратного корня
-                if (s == powkey) return Token(power);          // Ключевое слово возведения в степень
-                if (s == quitkey) return Token(quit);          // Ключевое слово выхода
+                if (s == declkey) return Token(let);          // Ключевое слово объявления "let"
+                if (s == constkey) return Token(con);         // Ключевое слово объявления "const"
+                if (s == sqrtkey) return Token(square_root);  // Ключевое слово квадратного корня
+                if (s == powkey) return Token(power);         // Ключевое слово возведения в степень
+                if (s == quitkey) return Token(quit);         // Ключевое слово выхода
                 return Token(name,s);
             }
             error("Неверная лексема");
@@ -262,7 +268,7 @@ double primary()
 {
     Token t = ts.get();
     switch (t.kind) {
-    case '(':                                        // Обработка правила '(' Выражение ')'
+    case '(':                                           // Обработка правила '(' Выражение ')'
         {
             double d = expression();
             t = ts.get();
@@ -270,25 +276,25 @@ double primary()
             return d;
         }
     case number:
-        return t.value;                              // Возвращает значение числа
+        return t.value;                                 // Возвращает значение числа
     case name:
         {
             Token next = ts.get();
-            if (next.kind == '=') {                  // Обработка правила name = expression
+            if (next.kind == '=') {                     // Обработка правила name = expression
                 double d = expression();
                 st.set(t.name,d);
                 return d;
             }
             else {
-                ts.unget(next);                      // не назначен: вернуть значение
-                return st.get(t.name);            // вернуть значение переменной
+                ts.unget(next);                         // не назначен: вернуть значение
+                return st.get(t.name);                  // вернуть значение переменной
             }
         }
     case '-':
         return - primary();
     case '+':
         return primary();
-    case square_root:                                // Обработка правила 'sqrt(' Выражение ')'
+    case square_root:                                   // Обработка правила 'sqrt(' Выражение ')'
         {
             t = ts.get();
             if (t.kind != '(') error("'(' требуется");
@@ -372,16 +378,16 @@ double expression()
     while(true) {
         switch(t.kind) {
             case '+':
-                left += term();                             // Оценивает Term и складывает
+                left += term();                         // Оценивает Term и складывает
                 t = ts.get();
                 break;
             case '-':
-                left -= term();                             // Оценивает Term и вычитает
+                left -= term();                         // Оценивает Term и вычитает
                 t = ts.get();
                 break;
             default:
-                ts.unget(t);                                // Помещает t обратно в поток токенов
-                return left;                                // Окончательно: нет + или -: возвращает ответ
+                ts.unget(t);                            // Помещает t обратно в поток токенов
+                return left;                            // Окончательно: нет + или -: возвращает ответ
         }
     }
 }
@@ -457,7 +463,7 @@ void calculate()
 int main()
 try {
     // Предопределение имён
-    st.declare("pi",3.1415926535,true);                     // Эти предопределённые имена являются константами
+    st.declare("pi",3.1415926535,true);                 // Эти предопределённые имена являются константами
     st.declare("e",2.7182818284,true);
     st.declare("k",1000,true);
 
