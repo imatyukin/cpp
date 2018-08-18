@@ -1,17 +1,5 @@
-// 4. The get_value(), set_value(), is_declared(), and define_name() functions all operate on the variable var_table.
-// Define a class called Symbol_table with a member var_table of type vector<Variable> and member functions get(),
-// set(), is_declared(), and declare(). Rewrite the calculator to use a variable of type Symbol_table.
-// 5. Modify Token_stream::get() to return Token(print) when it sees a newline. This implies looking for whitespace
-// characters and treating newline ('\n') specially. You might find the standard library function isspace(ch), which
-// returns true if ch is a whitespace character, useful.
-// 6. Part of what every program should do is to provide some way of helping its user. Have the calculator print out
-// some instructions for how to use the calculator if the user presses the H key (both upper- and lowercase).
-// 7. Change the q and h commands to be quit and help, respectively.
-// 8. The grammar in §7.6.4 is incomplete (we did warn you against overreliance on comments); it does not define
-// sequences of statements, such as 4+4; 5–6;, and it does not incorporate the grammar changes outlined in §7.8. Fix
-// that grammar. Also add whatever you feel is needed to that comment as the first comment of the calculator program and
-// its overall comment.
-// 9. Suggest three improvements (not mentioned in this chapter) to the calculator. Implement one of them.
+// 10. Modify the calculator to operate on ints (only); give errors for overflow and underflow. Hint: Use narrow_cast
+// (§7.5).
 
 /*
  * Простой калькулятор
@@ -31,10 +19,11 @@
  *      Объявление
  *      Выражение
  * Объявление:
- *      # Имя "=" Выражение
+ *      "let" Имя "=" Выражение
  *      "const" Имя "=" Выражение
  * Вывод:
  *      ;
+ *      "\n"
  * Выход:
  *      quit
  * Помощь
@@ -58,7 +47,7 @@
  *      sqrt( Выражение )
  *      pow( Выражение , Целочисленный_литерал )
  * Число:
- *      Литерал_с_плавающей_точкой
+ *      Целочисленный_литерал
  *      Имя:
  *          [a-zA-Z][a-zA-Z_0-9]*                       // Буква, за которой следует ноль или больше букв, символов
  *                                                      // подчёркивания и цифр
@@ -72,13 +61,13 @@
 
 struct Token {
     char kind;                                          // Какая лексема
-    double value;                                       // Для чисел: значение
+    int value;                                          // Для чисел: значение
     string name;                                        // Для имён: само имя
 
     // Инициализирует kind символом ch
     Token(char ch)              : kind(ch), value(0) { }
     // Инициализирует kind и value
-    Token(char ch, double val)  : kind(ch), value(val) { }
+    Token(char ch, int val)     : kind(ch), value(val) { }
     // Инициализирует kind и name
     Token(char ch, string n)    : kind(ch), name(n) { }
 };
@@ -101,7 +90,7 @@ private:
 
 //------------------------------------------------------------------------------
 
-const char let = '#';                                   // Лексема декларации let
+const char let = 'L';                                   // Лексема декларации let
 const char con = 'C';                                   // Лексема декларации const
 const char quit = 'Q';                                  // t.kind==quit означает, что t - лексема выхода
 const char help = 'h';                                  // Лексема помощи
@@ -112,7 +101,7 @@ const char square_root = 's';                           // Лексема ква
 const char power = 'p';                                 // Лексема функции возведения в степень
 const string prompt = "> ";                             // Используется для указания на то, что далее следует ввод
 const string result = "= ";                             // Используется для указания на то, что далее следует результат
-const string declkey = "#";                             // Ключевой символ #
+const string declkey = "let";                           // Ключевое слово let
 const string constkey = "const";                        // Ключевое слово const
 const string sqrtkey = "sqrt";                          // Ключевое слово sqrt
 const string powkey = "pow";                            // Ключевое слово pow
@@ -146,7 +135,6 @@ Token Token_stream::get()
         case '%':
         case '=':
         case ',':
-        case '#':
             return Token(ch);                           // Каждый символ представляет сам себя
         case '.':                                       // Число с плавающей точкой может начинаться с точки
         // Числовой литерал:
@@ -154,7 +142,7 @@ Token Token_stream::get()
         case '5': case '6': case '7': case '8': case '9':
         {
             cin.unget();                                // Возврат цифры во входной поток
-            double val;
+            int val;
             cin >> val;                                 // Чтение числа с плавающей точкой
             return Token(number,val);
         }
@@ -201,9 +189,9 @@ void Token_stream::ignore(char c)
 
 struct Variable {
     string name;
-    double value;
+    int value;
     bool is_const;
-    Variable(string n, double v, bool b) :name(n), value(v), is_const(b) { }
+    Variable(string n, int v, bool b) :name(n), value(v), is_const(b) { }
 };
 
 //------------------------------------------------------------------------------
@@ -211,18 +199,18 @@ struct Variable {
 class Symbol_table {
 // Тип для names и связанных функций
 public:
-    double get(string s);                               // Возвращает значение переменной s
-    void set(string s, double d);                       // Устанавливает переменную s в d
-    bool is_declared(string var);                       // var уже в names?
-    double declare(string var,double val,bool b);       // Добавляет (var,val) в names
+    int get(string s);                               // Возвращает значение переменной s
+    void set(string s, int d);                       // Устанавливает переменную s в d
+    bool is_declared(string var);                    // var уже в names?
+    int declare(string var,int val,bool b);          // Добавляет (var,val) в names
 private:
-    vector<Variable> names;                             // Вектор переменных
+    vector<Variable> names;                          // Вектор переменных
 };
 
 //------------------------------------------------------------------------------
 
 // Возвращает значение переменной s
-double Symbol_table::get(string s)
+int Symbol_table::get(string s)
 {
     for (int i = 0; i<names.size(); ++i)
         if (names[i].name == s) return names[i].value;
@@ -233,7 +221,7 @@ double Symbol_table::get(string s)
 
 //------------------------------------------------------------------------------
 
-void Symbol_table::set(string s, double d)
+void Symbol_table::set(string s, int d)
 // Устанавливает переменную s в d
 {
     for (int i = 0; i<names.size(); ++i)
@@ -257,7 +245,7 @@ bool Symbol_table::is_declared(string var)
 
 //------------------------------------------------------------------------------
 
-double Symbol_table::declare(string var, double val, bool b)
+int Symbol_table::declare(string var, int val, bool b)
 // Добавить (var,val) в names
 {
     if (is_declared(var)) error(var," повторное объявление");
@@ -275,11 +263,11 @@ Symbol_table st;                                        // обеспечива�
 
 //------------------------------------------------------------------------------
 
-double expression();                                    // Декларируется так, чтобы primary() мог вызывать expression()
+int expression();                                       // Декларируется так, чтобы primary() мог вызывать expression()
 
 //------------------------------------------------------------------------------
 
-double primary()
+int primary()
 // Для работы с числами и круглыми скобками
 // Вызывает expression()
 {
@@ -287,7 +275,7 @@ double primary()
     switch (t.kind) {
     case '(':                                           // Обработка правила '(' Выражение ')'
         {
-            double d = expression();
+            int d = expression();
             t = ts.get();
             if (t.kind != ')') error("')' требуется");
             return d;
@@ -298,7 +286,7 @@ double primary()
         {
             Token next = ts.get();
             if (next.kind == '=') {                     // Обработка правила name = expression
-                double d = expression();
+                int d = expression();
                 st.set(t.name,d);
                 return d;
             }
@@ -315,7 +303,7 @@ double primary()
         {
             t = ts.get();
             if (t.kind != '(') error("'(' требуется");
-            double d = expression();
+            int d = expression();
             if (d < 0) error("корень чётной степени из отрицательного числа не существует в области вещественных "
                              "чисел");
             t = ts.get();
@@ -326,7 +314,7 @@ double primary()
         {
             t = ts.get();
             if (t.kind != '(') error("'(' требуется");
-            double d = expression();
+            int d = expression();
             t = ts.get();
             if (t.kind != ',') error("',' требуется");
             t = ts.get();
@@ -346,11 +334,11 @@ double primary()
 
 //------------------------------------------------------------------------------
 
-double term()
+int term()
 // Для работы с *, / и %
 // Вызывает primary()
 {
-    double left = primary();
+    int left = primary();
     Token t = ts.get();                                 // Получает следующий токен из потока токенов
 
     while(true) {
@@ -361,7 +349,7 @@ double term()
             break;
         case '/':
             {
-                double d = primary();
+                int d = primary();
                 if (d == 0) error("деление на нуль");
                 left /= d;
                 t = ts.get();
@@ -385,11 +373,11 @@ double term()
 
 //------------------------------------------------------------------------------
 
-double expression()
+int expression()
 // Для работы с + and -
 // Вызывает term()
 {
-    double left = term();                               // Читает и оценивает Term
+    int left = term();                               // Читает и оценивает Term
     Token t = ts.get();                                 // Получает следующий токен из потока токенов
 
     while(true) {
@@ -411,7 +399,7 @@ double expression()
 
 //------------------------------------------------------------------------------
 
-double declaration(bool b)
+int declaration(bool b)
 // Считаем, что мы уже встретили ключевое слово "let"
 // Обрабатываем: Имя = Выражение
 // Объявление переменной с Именем с начальным значением, заданным Выражением
@@ -424,14 +412,14 @@ double declaration(bool b)
     Token t2 = ts.get();
     if (t2.kind != '=') error("пропущен символ = в объявлении " , var_name);
 
-    double d = expression();
+    int d = expression();
     st.declare(var_name,d,b);
     return d;
 }
 
 //------------------------------------------------------------------------------
 
-double statement()
+int statement()
 // Обрабатывает объявления и выражения
 {
     Token t = ts.get();
@@ -495,8 +483,8 @@ void calculate()
 int main()
 try {
     // Предопределение имён
-    st.declare("pi",3.1415926535,true);                 // Эти предопределённые имена являются константами
-    st.declare("e",2.7182818284,true);
+    st.declare("pi",3,true);                 // Эти предопределённые имена являются константами
+    st.declare("e",2,true);
     st.declare("k",1000,true);
 
     calculate();
