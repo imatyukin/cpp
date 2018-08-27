@@ -2,7 +2,6 @@
 // extern int foo;
 // void print_foo();
 // void print(int);
-//
 // The source code file my.cpp #includes my.h and std_lib_facilities.h, defines print_foo() to print the value of foo
 // using cout, and print(int i) to print the value of i using cout.
 // The source code file use.cpp #includes my.h, defines main() to set the value of foo to 7 and print it using
