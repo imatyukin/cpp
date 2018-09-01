@@ -197,7 +197,7 @@ Token Token_stream::get()
 //------------------------------------------------------------------------------
 
 void Token_stream::putback(Token t)
-// Возвращает токен обратно в поток токенов
+// Помещает токен обратно в поток токенов
 {
     if (full) error("putback() в заполненый буфер");
     buffer = t;                                         // копирует t в буфер
@@ -242,7 +242,7 @@ public:
     double get(string s);                               // Возвращает значение переменной s
     void set(string s, double d);                       // Устанавливает переменную с именем s в d
     bool is_declared(string var);                       // Проверяет находится ли var в var_table
-    double declare(string var, double val, bool b);       // Добавляет (var,val) в var_table
+    double declare(string var, double val, bool b);     // Добавляет (var,val) в var_table
     void print();
 private:
     vector<Variable> var_table;                         // Вектор переменных
@@ -308,7 +308,7 @@ void Symbol_table::print()
 
 //------------------------------------------------------------------------------
 
-Symbol_table st;                                   // обеспечивает get(), set(), is_declared() и declare()
+Symbol_table st;                                        // обеспечивает get(), set(), is_declared() и declare()
 
 //------------------------------------------------------------------------------
 
@@ -390,8 +390,8 @@ double primary(Token_stream& ts)
                 return st.get(t.name);
             }
         }
-        case sqrtfunc:                                   // Обработка правила "sqrt(" Выражение ")"
-        case powfunc:                                    // Обработка правила "pow(" Выражение ")"
+        case sqrtfunc:                                  // Обработка правила "sqrt(" Выражение ")"
+        case powfunc:                                   // Обработка правила "pow(" Выражение ")"
             // Вызывает eval_function() для свертывания вычисления различных функций в одном месте
             return eval_function(t.kind);
         default:
@@ -404,12 +404,12 @@ double primary(Token_stream& ts)
 //------------------------------------------------------------------------------
 
 double term(Token_stream& ts)
-// Для работы с *, / и %
+// Обработка *, / и %
 // Вызывает primary()
 {
     double left = primary(ts);
     while(true) {
-        Token t = ts.get();                             // Получает следующий токен из потока токенов
+        Token t = ts.get();                             // Получает следующий токен из Token_stream
         switch(t.kind) {
             case '*':
                 left *= primary(ts);
@@ -427,7 +427,7 @@ double term(Token_stream& ts)
                 break;
             }
             default:
-                ts.putback(t);                          // Помещает t обратно в поток токенов
+                ts.putback(t);                          // Помещает t обратно в Token_stream
                 return left;
         }
     }
@@ -436,88 +436,57 @@ double term(Token_stream& ts)
 //------------------------------------------------------------------------------
 
 double expression(Token_stream& ts)
-// Для работы с + and -
+// Обработка + and -
 // Вызывает term()
 {
-    double left = term(ts);                               // Читает и оценивает Term
+    double left = term(ts);                             // Читает и вычисляет Term
     while(true) {
         Token t = ts.get();                             // Получает следующий токен из потока токенов
         switch(t.kind) {
             case '+':
-                left += term(ts);                         // Оценивает Term и складывает
+                left += term(ts);                       // Вычисляет Term и складывает
                 break;
             case '-':
-                left -= term(ts);                         // Оценивает Term и вычитает
+                left -= term(ts);                       // Вычисляет Term и вычитает
                 break;
+            case '=':
+                error("использование '=' вне декларации");
             default:
                 ts.putback(t);                          // Помещает t обратно в поток токенов
-                return left;                            // Окончательно: нет + или -: возвращает ответ
+                return left;                            // Окончательно: нет + или -; возвращает ответ
         }
     }
 }
 
 //------------------------------------------------------------------------------
 
-double assignment(Token_stream& ts)
-{
-    // Имя и '=' идут дальше.
-    Token t = ts.get();
-    string var_name = t.name;
-    if (!st.is_declared(var_name)) error(var_name, " не было объявлено");
-
-    ts.get(); // Избавляемся от '='
-    double d = expression(ts);
-    st.set(var_name, d);
-    return d;
-}
-
-//------------------------------------------------------------------------------
-
 double declaration(bool b, Token_stream& ts)
-// Считаем, что мы уже встретили ключевое слово "let"
-// Обрабатываем: Имя = Выражение
-// Объявление переменной с Именем с начальным значением, заданным Выражением
-// k будет "let" или "con"(stant)
+// Обработка: Имя "=" Выражение
+// Объявление переменной названной "name" с начальным значением "expression"
 {
-    // Получить объявление ключевого слова токена, чтобы определить, является ли оно постоянным или нет.
     Token t = ts.get();
+    if (t.kind != name) error("в объявлении требуется имя переменной");
+    string var_name = t.name;
 
-    // Проверить по частям правила декларации правила грамматики за «let» или «const».
     Token t2 = ts.get();
-    if (t2.kind != name) error ("в объявлении ожидается имя переменной");
-    string var_name = t2.name;
-    if (st.is_declared(var_name)) error(var_name, " объявлен дважды");
-
-    Token t3 = ts.get();
-    if (t3.kind != '=') error("пропущен символ = в объявлении " ,var_name);
+    if (t2.kind != '=') error("пропущен символ = в объявлении " ,var_name);
 
     double d = expression(ts);
-    st.declare(var_name, d, t.kind == constant);
+    st.declare(var_name,d,b);
     return d;
 }
 
 //------------------------------------------------------------------------------
 
 double statement(Token_stream& ts)
-// Обрабатывает объявления и выражения
+// Обработка объявлений и выражений
 {
     Token t = ts.get();
-    switch(t.kind) {
+    switch (t.kind) {
         case let:
+            return declaration(false,ts);
         case constant:
-            ts.putback(t);
             return declaration(true,ts);
-        case name:
-        {
-            Token t2 = ts.get();
-            // Какой бы ни был t2, мы должны откатить
-            ts.putback(t2);
-            ts.putback(t);
-            if (t2.kind == '=') {
-                return assignment(ts);
-            }
-            return expression(ts);
-        }
         default:
             ts.putback(t);
             return expression(ts);
@@ -529,17 +498,19 @@ double statement(Token_stream& ts)
 void clean_up_mess(Token_stream& ts)
 // Очистка ввода после ошибки
 {
-    ts.ignore(print);                               // Отбросить ввод до команды печати или новой строки (включительно).
+    ts.ignore(print);                                   // Сбросить ввод до команды вывода
+                                                        // или символа новой строки (включительно).
 }
 
 //------------------------------------------------------------------------------
 
 const string prompt = "> ";
-const string result = "= ";
+const string result = "= ";                             // используется для обозначения, что далее следует результат
 
 //------------------------------------------------------------------------------
 
 void print_help()
+// Вывод инструкций помощи
 {
     cout << "\n\tСправка и инструкции к простому калькулятору.\n"
             "\n\tОСНОВНОЙ СИНТАКСИС\n\n"
@@ -576,21 +547,21 @@ void calculate()
         try {
             cout << prompt;                             // Вывод приглашения "> "
             Token t = ts.get();
-            while (t.kind == print) t = ts.get();       // Отбрасывание команд вывода
+            while (t.kind == print) t = ts.get();       // Отбрасывание всех команд вывода
             if (t.kind == command) {
                 if (t.name == quitkey) return;          // Выход
                 if (t.name == helpkey) print_help();    // Вывод инструкций помощи
-                if (t.name == symkey) st.print();
+                if (t.name == symkey) st.print();       // Вывод объявленных в настоящее время переменных и констант
                 ts.ignore(print);                       // Игнорирование чего-либо после команды
             }
             else {
                 ts.putback(t);
-                cout << result << statement(ts) << '\n';  // Вывод результатов
+                cout << result << statement(ts) << endl;    // Вывод результата
             }
         }
         catch(exception& e) {
-            cerr << e.what() << '\n';                   // Вывод сообщения об ошибке
-            clean_up_mess(ts);                            // Отменить оставшийся ввод и снова запросить пользователя
+            cerr << e.what() << '\n';                   // Написать сообщение об ошибке
+            clean_up_mess(ts);                          // Отменить оставшийся ввод и снова запросить пользователя
         }
 }
 
@@ -609,10 +580,14 @@ try {
     return 0;
 }
 catch (exception& e) {
-    cerr << "исключение: " << e.what() << '\n';
+    cerr << "исключение: " << e.what() << endl;
+    char c;
+    while (cin>>c && c!=';');
     return 1;
 }
 catch (...) {
     cerr << "Неизвестное исключение!\n";
+    char c;
+    while (cin>>c && c!=';');
     return 2;
 }
