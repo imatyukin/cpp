@@ -5,6 +5,8 @@
 // of elements to put into v; v[0] will be x and v[1] will be y. A Fibonacci number is one that is part of a sequence
 // where each element is the sum of the two previous ones. For example, starting with 1 and 2, we get 1, 2, 3, 5, 8, 13,
 // 21, . . . . Your fibonacci() function should make such a sequence starting with its x and y arguments.
+// 4. An int can hold integers only up to a maximum number. Find an approximation of that maximum number by using
+// fibonacci().
 
 #include "std_lib_facilities.h"
 
@@ -57,9 +59,12 @@ try
         vector<int> vf;
         fibonacci(val1,val2,vf,n);
         cout << "Фибоначчи(" << val1 << "," << val2 << ") ";
-        print(vf,"");
+        string s = "Ваша последовательность Фибоначчи";
+        print(vf,s);
         cout << "Попробуйте снова: ";
     }
+
+
 }
 catch (runtime_error e) {               // этот код предназначен для создания сообщений об ошибках
     cout << e.what() << '\n';
