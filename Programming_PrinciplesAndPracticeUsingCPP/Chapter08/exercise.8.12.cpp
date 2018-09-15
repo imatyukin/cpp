@@ -4,6 +4,8 @@
 
 #include "std_lib_facilities.h"
 
+using namespace std;
+
 void print_str(const vector<string>& v, const string& name)
 {
     cout << name << ": (" << v.size() << ") { ";
