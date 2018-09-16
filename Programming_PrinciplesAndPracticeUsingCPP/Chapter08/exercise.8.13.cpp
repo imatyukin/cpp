@@ -5,17 +5,17 @@
 
 using namespace std;
 
-void f(const int n)
+void f(const int i)
 {
-//  ++n;                // нельзя модифицировать const аргумент
-    cout << n << endl;
+//  ++i;                // нельзя модифицировать const аргумент
+    cout << i << endl;
 }
 
 int main()
 try
 {
-    int n = 1;
-    f(n);
+    int i = 1;
+    f(i);
 }
 catch (exception& e) {
     cerr << "exception: " << e.what() << endl;
