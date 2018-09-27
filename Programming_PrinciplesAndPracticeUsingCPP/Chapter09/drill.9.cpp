@@ -74,6 +74,43 @@ ostream& Chrono942::operator<<(ostream& os, const Date& d)
               << ',' << d.d << ')';
 }
 
+Chrono943::Date::Date(int yy, int mm, int dd)
+{
+    // Простой (и некорректный) конструктор даты с помощью простых (и некорректных) проверок
+    if (mm < 1 || mm > 12) cout << ("init_day: Invalid month") << endl;
+    if (dd < 1 || dd > 31) cout << ("init_day: Invalid day") << endl;
+
+    y = yy;
+    m = mm;
+    d = dd;
+}
+
+void Chrono943::Date::add_day(int n)
+{
+    // Увеличивает или уменьшает объект d на n дней
+
+    // Принимает (31*12) дней в году, предполагая, что каждый месяц имеет 31 день
+    int n_d = n % 31;          // дней вне месяцев, увеличить
+    int n_m = (n / 31) % 12;   // месяцев вне лет, уменьшить
+    int n_y = n / (31*12);     // годы увеличить
+
+    y += n_y;
+    m += n_m;
+    d += n_d;
+
+    if (d > 31) { ++m; d -= 31; }               // Day overflow
+    if (d < 1)  { --m; d += 31; }               // Day underflow
+    if (m > 12) { ++y; m -= 12; }               // Month overflow
+    if (m < 1)  { --y; m += 12; }               // Month underfow
+}
+
+ostream& Chrono943::operator<<(ostream& os, const Date& d)
+{
+    return os << '(' << d.year()
+              << ',' << d.month()
+              << ',' << d.day() << ')';
+}
+
 void the_version_from_9_4_1()
 {
     using namespace Chrono941;
@@ -108,11 +145,28 @@ void the_version_from_9_4_2()
     Date invalid_date{2004, 13, -5};
 }
 
+void the_version_from_9_4_3()
+{
+    using namespace Chrono943;
+
+    cout << "\nThe version from §9.4.3:\n";
+    Date today{1978, 6, 25};
+
+    Date tomorrow{today};
+    tomorrow.add_day(1);
+
+    cout << "Today: " << today << endl;
+    cout << "Tomorrow: " << tomorrow << endl;
+
+    Date invalid_date{2004, 13, -5};
+}
+
 int main()
 try
 {
     the_version_from_9_4_1();
     the_version_from_9_4_2();
+    the_version_from_9_4_3();
 
     return 0;
 }

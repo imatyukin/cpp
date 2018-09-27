@@ -5,9 +5,9 @@ using namespace std;
 namespace Chrono941 {
     // Простая структура Date (слишком просто?)
     struct Date {
-        int y;      // Год
-        int m;      // Месяц года
-        int d;      // День месяца
+        int y;                          // Год
+        int m;                          // Месяц года
+        int d;                          // День месяца
     };
 
     // Вспомогательные функции:
@@ -31,3 +31,19 @@ namespace Chrono942 {
     // Операторы
     ostream& operator<<(ostream& os, const Date& d);
 }   // Chrono942
+
+namespace Chrono943 {
+    // Простой тип Date (управляемый доступ)
+    class Date {
+        int y, m, d;                    // Год, месяц, день
+    public:
+        Date(int yy, int mm, int dd);   // Проверка и инициализация даты
+        void add_day(int n);            // Увеличение Date на n дней
+        int month() const { return m; }
+        int day() const { return d; }
+        int year() const { return y; }
+    };
+
+    // Операторы
+    ostream& operator<<(ostream& os, const Date& d);
+}   // Chrono943
