@@ -100,7 +100,7 @@ namespace Chrono974 {
     class Date {
     public:
         class Invalid { };
-        // Конструкторы
+        // Конструктор
         Date(int yy, Month mm, int dd); // Проверка корректности даты и инициализация
 
         // Константные члены: модифицировать объект не могут
