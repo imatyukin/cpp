@@ -47,3 +47,78 @@ namespace Chrono943 {
     // Операторы
     ostream& operator<<(ostream& os, const Date& d);
 }   // Chrono943
+
+namespace Chrono971 {
+    enum class Month {
+        jan=1, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec
+    };
+
+    // Операторы
+    Month operator+(const Month& m, int n);
+    // Определение других операторов на основе +
+    Month operator-(const Month& m, int n);
+    Month& operator+=(Month& m, int n);
+
+    bool operator<(const Month& m, int n);
+    bool operator>(const Month& m, int n);
+
+    // Простой класс Date (с использованием типа Month)
+    class Date {
+    public:
+        class Invalid { };
+        Date(int yy, Month mm, int dd); // Проверка корректности даты и инициализация
+        void add_day(int n);            // Увеличение Date на n дней
+        Month month() const { return m; }
+        int day() const { return d; }
+        int year() const { return y; }
+    private:
+        int y;                          // Год
+        Month m;
+        int d;                          // День
+        bool is_valid();
+    };
+
+    // Операторы
+    ostream& operator<<(ostream& os, const Date& d);
+}   // Chrono971
+
+namespace Chrono974 {
+    enum Month {
+        jan=1, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec
+    };
+
+    // Операторы
+    Month operator+(const Month& m, int n);
+    // Определение других операторов на основе +
+    Month operator-(const Month& m, int n);
+    Month& operator+=(Month& m, int n);
+
+    bool operator<(const Month& m, int n);
+    bool operator>(const Month& m, int n);
+
+    // Простой класс Date (с использованием типа Month)
+    class Date {
+    public:
+        class Invalid { };
+        // Конструкторы
+        Date(int yy, Month mm, int dd); // Проверка корректности даты и инициализация
+
+        // Константные члены: модифицировать объект не могут
+        int year() const { return y; };
+        Month month() const { return m; };
+        int day() const { return d; };
+
+        // Неконстантные члены: могут модифицировать объект
+        void add_year(int n);           // Увеличивает Date на n лет
+        void add_month(int n);          // Увеличивает Date на n месяцев
+        void add_day(int n);            // Увеличивает Date на n дней
+    private:
+        int y;                          // Год
+        Month m;                        // Месяц
+        int d;                          // День месяца
+        bool is_valid();
+    };
+
+    // Операторы
+    ostream& operator<<(ostream& os, const Date& d);
+}   // Chrono974
