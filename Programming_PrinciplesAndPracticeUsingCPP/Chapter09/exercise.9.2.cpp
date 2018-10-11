@@ -37,7 +37,6 @@ void Name_pairs::read_names()
 // Предлагает пользователю ввести возраст для каждого имени
 void Name_pairs::read_ages()
 {
-    age = vector<double>();
     for (int i = 0; i < name.size(); ++i) {
         cout << "Возраст " << name[i] << ": ";
         double a;
