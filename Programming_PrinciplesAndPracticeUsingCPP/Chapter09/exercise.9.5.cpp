@@ -34,6 +34,28 @@ try {
     s = Library::is_isbn(isbn) ? "" : "not ";
     cout << isbn << " is " << s << "a valid ISBN\n";
 
+    cout << endl;
+
+    // Тестирование класса Book
+    Book book{"9780-3219-9278-9", "Programming: Principles and Practice Using C++",
+              "Bjarne Stroustrup", 2014, true};
+    Library::print(cout, book);
+    book.check_out();
+    Library::print(cout, book);
+    book = Book{"9780-3215-6384-2", "The C++ Programming Language",
+              "Bjarne Stroustrup", 2013, true};
+    book.check_in();
+    Library::print(cout, book);
+    book.check_out();
+    Library::print(cout, book);
+    try {
+        book = Book{"???", "A Tour of C++", "Bjarne Stroustrup",
+                    2018, true};
+    }
+    catch(Library::Invalid_ISBN& e) {
+        cerr << "Invalid ISBN!\n";
+    }
+
     return 0;
 }
 catch (runtime_error e) {	// этот код предназначен для создания сообщений об ошибках
