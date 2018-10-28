@@ -36,4 +36,13 @@ namespace Library {
     bool is_isbn(const string& isbn);   // true, если код ISBN допустимой формы
     void print(ostream& os, const Book& book);
 
+    // Операторы класса Book
+
+    // == проверяет, совпадают ли коды ISBN у двух книг
+    bool operator==(const Book& b1, const Book& b2);
+    // != сравнивает коды ISBN
+    bool operator!=(const Book& b1, const Book& b2);
+    // << выводит в поток название, фамилию автора и код ISBN в отдельных строках
+    ostream& operator<<(ostream& os, const Book& book);
+
 }   // namespace Library

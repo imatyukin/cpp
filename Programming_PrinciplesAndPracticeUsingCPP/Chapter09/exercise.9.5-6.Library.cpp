@@ -1,5 +1,5 @@
 #include "std_lib_facilities.h"
-#include "exercise.9.5.Library.h"
+#include "exercise.9.5-6.Library.h"
 
 namespace Library {
 
@@ -53,6 +53,27 @@ namespace Library {
            << "  Выдана книга на руки или нет: ";
         if (book.checked_out()) os << "ДА\n";
         else os << "НЕТ\n";
+    }
+
+    // Операторы класса Book
+
+    bool operator==(const Book& b1, const Book& b2)
+    {
+        return (b1.isbn() == b2.isbn());
+    }
+
+    bool operator!=(const Book& b1, const Book& b2)
+    {
+        return !(b1 == b2);
+    }
+
+    ostream& operator<<(ostream& os, const Book& book)
+    {
+        os << book.title() << '\n'
+           << "  Author: " << book.author() << endl
+           << "  ISBN: " << book.isbn() << endl;
+
+        return os;
     }
 
 }   // namespace Library

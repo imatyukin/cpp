@@ -3,14 +3,19 @@
 // data on whether or not the book is checked out. Create functions for returning those data values. Create functions
 // for checking a book in and out. Do simple validation of data entered into a Book; for example, accept ISBNs only of
 // the form n-n-n-x where n is an integer and x is a digit or a letter. Store an ISBN as a string.
+//
+// 6. Add operators for the Book class. Have the == operator check whether the ISBN numbers are the same for two books.
+// Have != also compare the ISBN numbers. Have a << print out the title, author, and ISBN on separate lines.
 
 #include "std_lib_facilities.h"
-#include "exercise.9.5.Library.h"
+#include "exercise.9.5-6.Library.h"
 
 using namespace Library;
 
 int main()
 try {
+    cout << "Exercise 9.5:" << '\n' << endl;
+
     // Тестирование функции Library::is_isbn()
     string s{};
     string isbn{};
@@ -55,6 +60,28 @@ try {
     catch(Library::Invalid_ISBN& e) {
         cerr << "Invalid ISBN!\n";
     }
+
+    cout << '\n' << "Exercise 9.6:" << '\n' << endl;
+
+    // Тестирование операторов класса Book
+    Book book1{"9780-3219-9278-9", "Programming: Principles and Practice Using C++",
+              "Bjarne Stroustrup", 2014, true};
+    cout << book1;
+
+    Book b1{"9780-3215-6384-2",
+            "The C++ Programming Language",
+            "Bjarne Stroustrup", 2013, true};
+    Book b2{"9780-3215-6384-2",
+            "The C++ Programming Language",
+            "Bjarne Stroustrup", 2013, true};
+
+    if (b1 == b2) cout << '\n' << b1
+                       << "\n-- is the same book as --\n\n"
+                       << b2 << '\n';
+    cout << "----------------------\n";
+    if (book1 != b2) cout << '\n' << book1
+                         << "\n-- is not the same book as --\n\n"
+                         << b2 << '\n';
 
     return 0;
 }
