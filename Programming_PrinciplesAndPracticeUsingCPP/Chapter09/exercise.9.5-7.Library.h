@@ -8,8 +8,13 @@ namespace Library {
     // класс Book
     class Book {
     public:
+        // перечисление типов для класса Book: фантастика, проза, периодические издания, биографии и детская литература
+        enum Genre {
+            fiction, nonfiction, periodical, biography, children
+        };
+
         // конструкторы
-        Book(string isbn, string title, string author, int copyright_date, bool checked_out);
+        Book(string isbn, string title, string author, int copyright_date, Genre genre, bool checked_out);
         Book(); // конструктор по умолчанию
 
         // Константные члены: модифицировать объект не могут
@@ -17,6 +22,7 @@ namespace Library {
         string title() const { return t; }
         string author() const { return a; }
         int copyright_date() const { return cd; }
+        Genre genre() const { return g; }
         bool checked_out() const { return co; }
 
         // Неконстантные члены: могут модифицировать объект
@@ -28,6 +34,7 @@ namespace Library {
         string t;   // название книги
         string a;   // фамилия автора
         int cd;     // дата регистрации авторских прав
+        Genre g;    // жанр книги
         bool co;    // данные о том, выдана книга на руки или нет
     };
 
@@ -35,6 +42,7 @@ namespace Library {
 
     bool is_isbn(const string& isbn);   // true, если код ISBN допустимой формы
     void print(ostream& os, const Book& book);
+    string parse_genre(const Book::Genre& genre);
 
     // Операторы класса Book
 

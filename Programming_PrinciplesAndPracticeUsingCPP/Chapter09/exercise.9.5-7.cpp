@@ -3,12 +3,14 @@
 // data on whether or not the book is checked out. Create functions for returning those data values. Create functions
 // for checking a book in and out. Do simple validation of data entered into a Book; for example, accept ISBNs only of
 // the form n-n-n-x where n is an integer and x is a digit or a letter. Store an ISBN as a string.
-//
 // 6. Add operators for the Book class. Have the == operator check whether the ISBN numbers are the same for two books.
 // Have != also compare the ISBN numbers. Have a << print out the title, author, and ISBN on separate lines.
+// 7. Create an enumerated type for the Book class called Genre. Have the types be fiction, nonfiction, periodical,
+// biography, and children. Give each book a Genre and make appropriate changes to the Book constructor and member
+// functions.
 
 #include "std_lib_facilities.h"
-#include "exercise.9.5-6.Library.h"
+#include "exercise.9.5-7.Library.h"
 
 using namespace Library;
 
@@ -16,7 +18,7 @@ int main()
 try {
     cout << "Exercise 9.5:" << '\n' << endl;
 
-    // Тестирование функции Library::is_isbn()
+    // тестирование функции Library::is_isbn()
     string s{};
     string isbn{};
 
@@ -41,21 +43,21 @@ try {
 
     cout << endl;
 
-    // Тестирование класса Book
+    // тестирование класса Book
     Book book{"9780-3219-9278-9", "Programming: Principles and Practice Using C++",
-              "Bjarne Stroustrup", 2014, true};
+              "Bjarne Stroustrup", 2014, Book::Genre::nonfiction, true};
     Library::print(cout, book);
     book.check_out();
     Library::print(cout, book);
     book = Book{"9780-3215-6384-2", "The C++ Programming Language",
-              "Bjarne Stroustrup", 2013, true};
+              "Bjarne Stroustrup", 2013, Book::Genre::nonfiction, true};
     book.check_in();
     Library::print(cout, book);
     book.check_out();
     Library::print(cout, book);
     try {
         book = Book{"???", "A Tour of C++", "Bjarne Stroustrup",
-                    2018, true};
+                    2018, Book::Genre::nonfiction, true};
     }
     catch(Library::Invalid_ISBN& e) {
         cerr << "Invalid ISBN!\n";
@@ -63,25 +65,47 @@ try {
 
     cout << '\n' << "Exercise 9.6:" << '\n' << endl;
 
-    // Тестирование операторов класса Book
-    Book book1{"9780-3219-9278-9", "Programming: Principles and Practice Using C++",
-              "Bjarne Stroustrup", 2014, true};
-    cout << book1;
+    // тестирование операторов класса Book
+    book = Book{"9780-3219-9278-9", "Programming: Principles and Practice Using C++",
+              "Bjarne Stroustrup", 2014, Book::Genre::nonfiction, true};
+    cout << book;
 
     Book b1{"9780-3215-6384-2",
             "The C++ Programming Language",
-            "Bjarne Stroustrup", 2013, true};
+            "Bjarne Stroustrup", 2013, Book::Genre::nonfiction, true};
     Book b2{"9780-3215-6384-2",
             "The C++ Programming Language",
-            "Bjarne Stroustrup", 2013, true};
+            "Bjarne Stroustrup", 2013, Book::Genre::nonfiction, true};
 
     if (b1 == b2) cout << '\n' << b1
                        << "\n-- is the same book as --\n\n"
                        << b2 << '\n';
     cout << "----------------------\n";
-    if (book1 != b2) cout << '\n' << book1
+    if (book != b2) cout << '\n' << book
                          << "\n-- is not the same book as --\n\n"
                          << b2 << '\n';
+
+    cout << "Exercise 9.7:" << '\n' << endl;
+
+    // тестирование перечисления Genre для класса Book и его типов
+    book = Book{"9780-3219-9278-9", "Programming: Principles and Practice Using C++",
+              "Bjarne Stroustrup", 2014,
+              Book::Genre::nonfiction, true};
+    cout << book;
+
+    book = Book{"9780-1560-2760-1", "Solaris", "Stanislaw Lem",
+                2002, Book::Genre::fiction, true};
+    cout << book;
+
+    book = Book{"9781-5932-7407-8", "Python for Kids: A Playful Introduction To Programming",
+                "Jason R. Briggs", 2012,
+                Book::Genre::children, true};
+    cout << book;
+
+    book = Book{"9781-2500-7483-6", "Limonov", "Emmanuel Carrère",
+                2015, Book::Genre::biography, true};
+    cout << book;
+
 
     return 0;
 }

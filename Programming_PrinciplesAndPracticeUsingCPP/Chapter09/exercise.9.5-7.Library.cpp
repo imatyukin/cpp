@@ -1,10 +1,10 @@
 #include "std_lib_facilities.h"
-#include "exercise.9.5-6.Library.h"
+#include "exercise.9.5-7.Library.h"
 
 namespace Library {
 
-    Book::Book(string isbn, string title, string author, int copyright_date, bool checked_out)
-        :id{isbn}, t{title}, a{author}, cd{copyright_date}, co{false}
+    Book::Book(string isbn, string title, string author, int copyright_date, Genre genre, bool checked_out)
+        :id{isbn}, t{title}, a{author}, cd{copyright_date}, g{genre}, co{false}
     {
         if (!is_isbn(isbn)) throw Invalid_ISBN{};
     }
@@ -55,6 +55,24 @@ namespace Library {
         else os << "НЕТ\n";
     }
 
+    string parse_genre(const Book::Genre& genre) {
+
+        switch (genre) {
+            case Book::Genre::fiction:
+                return "Fiction";
+            case Book::Genre::nonfiction:
+                return "Non fiction";
+            case Book::Genre::periodical:
+                return "Periodical";
+            case Book::Genre::biography:
+                return "Biography";
+            case Book::Genre::children:
+                return "Children";
+            default:
+                return "Unknown genre";
+        }
+    }
+
     // Операторы класса Book
 
     bool operator==(const Book& b1, const Book& b2)
@@ -71,7 +89,8 @@ namespace Library {
     {
         os << book.title() << '\n'
            << "  Author: " << book.author() << endl
-           << "  ISBN: " << book.isbn() << endl;
+           << "  ISBN: " << book.isbn() << endl
+           << "  Genre: " << parse_genre(book.genre()) << endl;
 
         return os;
     }
