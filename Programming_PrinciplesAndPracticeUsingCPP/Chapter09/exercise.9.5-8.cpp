@@ -8,9 +8,12 @@
 // 7. Create an enumerated type for the Book class called Genre. Have the types be fiction, nonfiction, periodical,
 // biography, and children. Give each book a Genre and make appropriate changes to the Book constructor and member
 // functions.
+// 8. Create a Patron class for the library. The class will have a user’s name, library card number, and library fees
+// (if owed). Have functions that access this data, as well as a function to set the fee of the user. Have a helper
+// function that returns a Boolean (bool) depending on whether or not the user owes a fee.
 
 #include "std_lib_facilities.h"
-#include "exercise.9.5-7.Library.h"
+#include "exercise.9.5-8.Library.h"
 
 using namespace Library;
 
@@ -18,7 +21,7 @@ int main()
 try {
     cout << "Exercise 9.5:" << '\n' << endl;
 
-    // тестирование функции Library::is_isbn()
+    // Тестирование функции Library::is_isbn()
     string s{};
     string isbn{};
 
@@ -43,7 +46,7 @@ try {
 
     cout << endl;
 
-    // тестирование класса Book
+    // Тестирование класса Book
     Book book{"9780-3219-9278-9", "Programming: Principles and Practice Using C++",
               "Bjarne Stroustrup", 2014, Book::Genre::nonfiction, true};
     Library::print(cout, book);
@@ -65,7 +68,7 @@ try {
 
     cout << '\n' << "Exercise 9.6:" << '\n' << endl;
 
-    // тестирование операторов класса Book
+    // Тестирование операторов класса Book
     book = Book{"9780-3219-9278-9", "Programming: Principles and Practice Using C++",
               "Bjarne Stroustrup", 2014, Book::Genre::nonfiction, true};
     cout << book;
@@ -87,7 +90,7 @@ try {
 
     cout << "Exercise 9.7:" << '\n' << endl;
 
-    // тестирование перечисления Genre для класса Book и его типов
+    // Тестирование перечисления Genre для класса Book и его типов
     book = Book{"9780-3219-9278-9", "Programming: Principles and Practice Using C++",
               "Bjarne Stroustrup", 2014,
               Book::Genre::nonfiction, true};
@@ -105,6 +108,31 @@ try {
     book = Book{"9781-2500-7483-6", "Limonov", "Emmanuel Carrère",
                 2015, Book::Genre::biography, true};
     cout << book;
+
+    cout << '\n' << "Exercise 9.8:" << '\n' << endl;
+
+    // Тестирование типа Patron
+    Patron patron{"Igor Matyukin", 1, 0};
+    cout << patron;
+
+    // Тестирование вспомогательного метода owes_fees()
+    if (owes_fees(patron)) cout << "Пользователь заплатил членский взнос.\n";
+    else cout << "Членский взнос не оплачен.\n";
+
+    // Тестирование функции Patron::set_fees(), устанавливающей размер членского взноса
+    patron.set_fees(39.5);
+    cout << endl;
+    cout << "Оплата членского взноса ...\n" << patron;
+    if (owes_fees(patron)) cout << "Пользователь заплатил членский взнос.\n";
+    else cout << "Членский взнос не оплачен.\n";
+
+    // Тестирование ошибки для Patron::set_fees()
+    try {
+        patron.set_fees(-39.5);
+    }
+    catch(exception& e) {
+        cerr << e.what() << '\n';
+    }
 
 
     return 0;

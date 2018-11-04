@@ -1,8 +1,9 @@
 #include "std_lib_facilities.h"
-#include "exercise.9.5-7.Library.h"
+#include "exercise.9.5-8.Library.h"
 
 namespace Library {
 
+    // Функции, имеющие доступ к членам класса Book
     Book::Book(string isbn, string title, string author, int copyright_date, Genre genre, bool checked_out)
         :id{isbn}, t{title}, a{author}, cd{copyright_date}, g{genre}, co{false}
     {
@@ -16,12 +17,12 @@ namespace Library {
         bool n{false};  // Проходится число
 
         for (size_t i = 0; i < isbn.size(); ++i) {
-            char c{isbn[i]};    // рассматривается текущий символ
+            char c{isbn[i]};    // Рассматривается текущий символ
 
-            // если меньше трёх дефисов, то ищется цифра или дефис
+            // Если меньше трёх дефисов, то ищется цифра или дефис
             if (hyphen < 3) {
                 if (!isdigit(c)) {
-                    if (c == '-' && n) {    // дефис отмечает конец числа
+                    if (c == '-' && n) {    // Дефис отмечает конец числа
                         ++hyphen;
                         n = false;
                     }
@@ -30,17 +31,17 @@ namespace Library {
                     }
                 }
                 else {
-                    // является цифрой, поэтому находимся на числе
+                    // Является цифрой, поэтому находимся на числе
                     n = true;
                 }
             }
             else {  // После третьего дефиса должен быть только символ
                 if (i != (isbn.size()-1)) return false;
-                // символ должен быть цифра или буква
+                // Символ должен быть цифра или буква
                 return (isdigit(c) || isalpha(c));
             }
         }
-        // если цикл заканчивается без возврата, код ISBN недопустимой формы
+        // Если цикл заканчивается без возврата, код ISBN недопустимой формы
         return false;
     }
 
@@ -91,6 +92,48 @@ namespace Library {
            << "  Author: " << book.author() << endl
            << "  ISBN: " << book.isbn() << endl
            << "  Genre: " << parse_genre(book.genre()) << endl;
+
+        return os;
+    }
+
+    // Функции, имеющие доступ к членам класса Patron
+    Patron::Patron(string name, int card_number, double fees)
+          :n{name}, cn{card_number}, f{fees}
+    {
+    }
+
+    const Patron& default_patron()
+    {
+        static const Patron p("",0,0);
+        return p;
+    }
+
+    Patron::Patron()
+          :n(default_patron().name()),
+          cn(default_patron().card_number()),
+          f(default_patron().fees())
+    {
+    }
+
+    void Patron::set_fees(double fee)
+    {
+        if (fee < 0) error("Patron::set_fees(): размер членского взноса не может быть меньше нуля");
+        f = fee;
+    }
+
+    // Вспомогательный метод
+    bool owes_fees(const Patron& p)
+    {
+        return p.fees() > 0;
+    }
+
+    // Операторы класса Patron
+
+    ostream& operator<<(ostream& os, const Patron& p)
+    {
+        os << "Имя пользователя: " << p.name() << endl
+           << "Номер библиотечной карточки: " << p.card_number() << endl
+           << "Размер членского взноса: " << p.fees() << endl;
 
         return os;
     }
