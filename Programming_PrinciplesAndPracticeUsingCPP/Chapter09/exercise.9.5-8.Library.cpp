@@ -75,7 +75,6 @@ namespace Library {
     }
 
     // Операторы класса Book
-
     bool operator==(const Book& b1, const Book& b2)
     {
         return (b1.isbn() == b2.isbn());
@@ -127,8 +126,7 @@ namespace Library {
         return p.fees() > 0;
     }
 
-    // Операторы класса Patron
-
+    // Оператор класса Patron
     ostream& operator<<(ostream& os, const Patron& p)
     {
         os << "Имя пользователя: " << p.name() << endl
