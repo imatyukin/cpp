@@ -1,7 +1,7 @@
 #include "std_lib_facilities.h"
-#include "exercise.9.5-8.Library.h"
+#include "exercise.9.5-9.Library.h"
 
-namespace Library {
+namespace MyLibrary {
 
     // Функции, имеющие доступ к членам класса Book
     Book::Book(string isbn, string title, string author, int copyright_date, Genre genre, bool checked_out)
@@ -136,4 +136,101 @@ namespace Library {
         return os;
     }
 
-}   // namespace Library
+    // Структура Transaction класса Library, с включенными в ней членами классов Book, Patron и Date
+    Library::Transaction::Transaction(Book bb, Patron pp, Chrono::Date dd)
+            :b(bb), p(pp), d(dd)
+    {
+    }
+
+    // Класс Library
+    Library::Library(vector<Book> b, vector<Patron> p, vector<Transaction> t)
+            :books(b), patrons(p), transactions(t)
+    {
+    }
+
+    // Функция добавляющая записи о книгах
+    void Library::add_book(const Book& b)
+    {
+        // Проверка, находится ли книга в библиотеке
+        for (int i = 0; i<books.size(); ++i) {
+            if (books[i] == b) error("add_book(): книга уже в библиотеке");
+        }
+        books.push_back(b);
+    }
+
+    // Функция добавляющая записи о клиентах библиотеки
+    void Library::add_patron(const Patron& p)
+    {
+        // Проверка, зарегистрирован ли пользователь
+        /*
+        for (int i = 0; i<patrons.size(); ++i) {
+            if (patrons[i] == p) error("add_patron(): пользователь уже зарегистрирован");
+        }
+        */
+        patrons.push_back(p);
+    }
+
+    void Library::check_out(Book& b, const Patron& p, const Chrono::Date& d)
+    {
+        // Проверка нахождения книги в библиотеке
+        bool b_exists = false;
+        int b_idx = 0;
+        for (int i = 0; i<books.size(); ++i) {
+            if (books[i] == b) {
+                b_exists = true;
+                b_idx = i;
+                break;  // нет необходимости смотреть дальше
+            }
+        }
+        if (!b_exists) error("check_out(): книги в библиотеке нет");
+
+        // Проверка выдачи книги
+        if (books[b_idx].checked_out()) error("check_out(): книга уже выдана читателю");
+
+        // Проверка регистрирации пользователя
+        bool p_exists = false;
+        int p_idx = 0;
+        for (int i = 0; i<patrons.size(); ++i) {
+            if (patrons[i] == p) {
+                p_exists = true;
+                p_idx = i;
+                break;  // нет необходимости смотреть дальше
+            }
+        }
+        if (!p_exists) error("check_out(): пользователь не зарегистрирован");
+
+        // Проверка, есть ли задолженность по уплате членских взносов у пользователя
+        if (patrons[p_idx].fees() > 0) error("check_out(): у пользователя есть задолженность по уплате членских взносов");
+
+        // создание Transaction
+        transactions.push_back(Transaction(books[b_idx],patrons[p_idx],d));
+        books[b_idx].check_out();
+    }
+
+    void Library::set_fee(const Patron& p, double f)
+    {
+        // Нахождение пользователя
+        int idx = 0;
+        bool exists = false;
+        for (int i = 0; i<patrons.size(); ++i) {
+            if (patrons[i] == p) {
+                exists = true;
+                idx = i;
+                break;
+            }
+        }
+        if (!exists) error("Library::set_fee(): пользователь не существует");
+        patrons[idx].set_fees(f);
+    }
+
+    vector<Patron> Library::get_debtors() const
+    {
+        vector<Patron> debtors;
+        for (int i = 0; i<patrons.size(); ++i) {
+            if (patrons[i].fees() > 0)
+                debtors.push_back(patrons[i]);
+        }
+        return debtors;
+    }
+
+}   // namespace MyLibrary

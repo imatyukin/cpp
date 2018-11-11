@@ -1,6 +1,7 @@
 #include "std_lib_facilities.h"
+#include "Chrono.h"
 
-namespace Library {
+namespace MyLibrary {
 
     // В случае, если код ISBN недопустимой формы
     class Invalid_ISBN { }; // Код ISBN допускается только в форме n-n-n-x, где n - целое число; x - цифра или буква
@@ -81,4 +82,45 @@ namespace Library {
 
     ostream& operator<<(ostream& os, const Patron& p);
 
-}   // namespace Library
+    // Класс Library
+    class Library {
+    public:
+        // Структура Transaction для членов классов Book, Patron и Date
+        struct Transaction {
+            Book b;
+            Patron p;
+            Chrono::Date d;
+
+            Transaction(Book bb, Patron pp, Chrono::Date dd);
+            Transaction();
+        };
+        // Конструкторы
+        Library(vector<Book> books, vector<Patron> patrons, vector<Transaction> transactions);
+        Library();
+
+        // Константные члены: модифицировать объект не могут
+        vector<Book> get_books() const { return books; }
+        vector<Patron> get_patrons() const { return patrons; }
+        // Если у пользователя нет задолженности, то создаётся объект класса Transaction
+        // и помещает его в вектор объектов класса Transaction
+        vector<Transaction> get_transactions() const { return transactions; }
+        // Функция возвращающая вектор, содержащий имена всех клиентов, имеющих задолженность
+        vector<Patron> get_debtors() const;
+
+        // Неконстантные члены: могут модифицировать объект
+        // Функция добавляющая записи о книгах
+        void add_book(const Book& b);
+        // Функция добавляющая записи о клиентах библиотеки
+        void add_patron(const Patron& p);
+        // Функция о состоянии книг (выдана ли книга читателю)
+        void check_out(Book& b, const Patron& p, const Chrono::Date& d);
+        // Функция проверки, нет ли у пользователя задолженности по уплате членских взносов
+        void set_fee(const Patron& p, double f);
+    private:
+        // Векторы объектов классов Book, Patron и Transaction
+        vector<Book> books;
+        vector<Patron> patrons;
+        vector<Transaction> transactions;
+    };
+
+}   // namespace MyLibrary
