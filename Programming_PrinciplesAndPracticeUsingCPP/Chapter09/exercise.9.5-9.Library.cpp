@@ -172,11 +172,9 @@ namespace MyLibrary {
     void Library::add_patron(const Patron& p)
     {
         // Проверка, зарегистрирован ли пользователь
-        /*
         for (int i = 0; i<patrons.size(); ++i) {
             if (patrons[i] == p) error("add_patron(): пользователь уже зарегистрирован");
         }
-        */
         patrons.push_back(p);
     }
 

@@ -22,8 +22,6 @@
 #include "std_lib_facilities.h"
 #include "exercise.9.5-9.Library.h"
 
-using Chrono::Date;
-
 using namespace MyLibrary;
 
 int main()
@@ -118,7 +116,6 @@ try {
                 2015, Book::Genre::biography, true};
     cout << book;
 
-    /*
     cout << '\n' << "Exercise 9.8:" << '\n' << endl;
 
     // Тестирование типа Patron
@@ -145,7 +142,15 @@ try {
     }
 
     cout << '\n' << "Exercise 9.9:" << '\n' << endl;
-*/
+
+    Book mybook{"9780-3219-9278-9",
+              "Programming: Principles and Practice Using C++",
+              "Bjarne Stroustrup",
+              2014,
+              Book::nonfiction,
+              false};
+
+    cout << mybook;
 
     return 0;
 }
