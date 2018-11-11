@@ -81,6 +81,8 @@ namespace MyLibrary {
     // Оператор класса Patron
 
     ostream& operator<<(ostream& os, const Patron& p);
+    bool operator==(const Patron& p1, const Patron& p2);
+    bool operator!=(const Patron& p1, const Patron& p2);
 
     // Класс Library
     class Library {

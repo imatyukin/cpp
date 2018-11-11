@@ -136,6 +136,16 @@ namespace MyLibrary {
         return os;
     }
 
+    bool operator==(const Patron& p1, const Patron& p2)
+    {
+        return (p1.card_number() == p2.card_number());
+    }
+
+    bool operator!=(const Patron& p1, const Patron& p2)
+    {
+        return !(p1 == p2);
+    }
+
     // Структура Transaction класса Library, с включенными в ней членами классов Book, Patron и Date
     Library::Transaction::Transaction(Book bb, Patron pp, Chrono::Date dd)
             :b(bb), p(pp), d(dd)

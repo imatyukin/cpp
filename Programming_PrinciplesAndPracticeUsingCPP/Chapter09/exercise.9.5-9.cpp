@@ -118,6 +118,7 @@ try {
                 2015, Book::Genre::biography, true};
     cout << book;
 
+    /*
     cout << '\n' << "Exercise 9.8:" << '\n' << endl;
 
     // Тестирование типа Patron
@@ -144,7 +145,7 @@ try {
     }
 
     cout << '\n' << "Exercise 9.9:" << '\n' << endl;
-
+*/
 
     return 0;
 }
