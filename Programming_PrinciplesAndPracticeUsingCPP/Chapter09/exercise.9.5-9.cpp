@@ -21,8 +21,47 @@
 
 #include "std_lib_facilities.h"
 #include "exercise.9.5-9.Library.h"
+#include "exercise.9.5-9.Chrono.h"
 
 using namespace MyLibrary;
+
+void test_my_library() {
+
+    // Создание библиотеки
+    Library my_library;
+
+    // Создание и добавление книг
+    Book my_book("9780-3219-9278-9",
+                 "Programming: Principles and Practice Using C++",
+                 "Bjarne Stroustrup",
+                 2014,
+                 Book::nonfiction,
+                 false);
+
+    my_library.add_book(my_book);
+
+    Book my_book2("9780-1349-9783-4",
+                  "A Tour of C++ (C++ In-Depth Series)",
+                  "Bjarne Stroustrup",
+                  2018,
+                  Book::nonfiction,
+                  false);
+
+    my_library.add_book(my_book2);
+
+    my_library.add_book(Book("9780-3215-6384-2",
+                         "The C++ Programming Language",
+                         "Bjarne Stroustrup",
+                         2013,
+                         Book::nonfiction,
+                         false));
+
+    // Печать списка книг
+    cout << "Книги библиотеки:\n\n";
+    my_library.print_books(cout);
+
+
+}
 
 int main()
 try {
@@ -143,14 +182,8 @@ try {
 
     cout << '\n' << "Exercise 9.9:" << '\n' << endl;
 
-    Book mybook{"9780-3219-9278-9",
-              "Programming: Principles and Practice Using C++",
-              "Bjarne Stroustrup",
-              2014,
-              Book::nonfiction,
-              false};
+    test_my_library();
 
-    cout << mybook;
 
     return 0;
 }

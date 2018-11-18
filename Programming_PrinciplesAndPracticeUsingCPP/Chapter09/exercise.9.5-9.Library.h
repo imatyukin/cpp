@@ -1,5 +1,5 @@
 #include "std_lib_facilities.h"
-#include "Chrono.h"
+#include "exercise.9.5-9.Chrono.h"
 
 namespace MyLibrary {
 
@@ -89,40 +89,34 @@ namespace MyLibrary {
     public:
         // Структура Transaction для членов классов Book, Patron и Date
         struct Transaction {
-            Book b;
-            Patron p;
-            Chrono::Date d;
+            Book book;
+            Patron patron;
+            Chrono::Date date;
 
-            Transaction(Book bb, Patron pp, Chrono::Date dd);
-            Transaction();
+            Transaction(Book bb,Patron pp,Chrono::Date dd);
         };
-        // Конструкторы
-        Library(vector<Book> books, vector<Patron> patrons, vector<Transaction> transactions);
-        Library();
 
-        // Константные члены: модифицировать объект не могут
-        vector<Book> get_books() const { return books; }
-        vector<Patron> get_patrons() const { return patrons; }
-        // Если у пользователя нет задолженности, то создаётся объект класса Transaction
-        // и помещает его в вектор объектов класса Transaction
-        vector<Transaction> get_transactions() const { return transactions; }
-        // Функция возвращающая вектор, содержащий имена всех клиентов, имеющих задолженность
-        vector<Patron> get_debtors() const;
-
-        // Неконстантные члены: могут модифицировать объект
         // Функция добавляющая записи о книгах
-        void add_book(const Book& b);
+        void add_book(Book b);
         // Функция добавляющая записи о клиентах библиотеки
-        void add_patron(const Patron& p);
+        void add_patron(Patron p);
         // Функция о состоянии книг (выдана ли книга читателю)
-        void check_out(Book& b, const Patron& p, const Chrono::Date& d);
-        // Функция проверки, нет ли у пользователя задолженности по уплате членских взносов
-        void set_fee(const Patron& p, double f);
+        void check_out(Book b, Patron p, Chrono::Date d);
+
+        // Отчёты
+        // Возвращает имена пользователей имеющих задолженности по уплате членских взносов
+        vector<string> with_fees() const;
+        void print_books(ostream& os) const;
+        void print_patrons(ostream& os) const;
+        void print_transactions(ostream& os) const;
     private:
         // Векторы объектов классов Book, Patron и Transaction
         vector<Book> books;
         vector<Patron> patrons;
         vector<Transaction> transactions;
     };
+
+    // Оператор транзакций
+    ostream& operator<<(ostream& os, const Library::Transaction& t);
 
 }   // namespace MyLibrary

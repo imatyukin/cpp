@@ -148,18 +148,12 @@ namespace MyLibrary {
 
     // Структура Transaction класса Library, с включенными в ней членами классов Book, Patron и Date
     Library::Transaction::Transaction(Book bb, Patron pp, Chrono::Date dd)
-            :b(bb), p(pp), d(dd)
-    {
-    }
-
-    // Класс Library
-    Library::Library(vector<Book> b, vector<Patron> p, vector<Transaction> t)
-            :books(b), patrons(p), transactions(t)
+            :book(bb), patron(pp), date(dd)
     {
     }
 
     // Функция добавляющая записи о книгах
-    void Library::add_book(const Book& b)
+    void Library::add_book(Book b)
     {
         // Проверка, находится ли книга в библиотеке
         for (int i = 0; i<books.size(); ++i) {
@@ -169,7 +163,7 @@ namespace MyLibrary {
     }
 
     // Функция добавляющая записи о клиентах библиотеки
-    void Library::add_patron(const Patron& p)
+    void Library::add_patron(Patron p)
     {
         // Проверка, зарегистрирован ли пользователь
         for (int i = 0; i<patrons.size(); ++i) {
@@ -178,7 +172,7 @@ namespace MyLibrary {
         patrons.push_back(p);
     }
 
-    void Library::check_out(Book& b, const Patron& p, const Chrono::Date& d)
+    void Library::check_out(Book b, Patron p, Chrono::Date d)
     {
         // Проверка нахождения книги в библиотеке
         bool b_exists = false;
@@ -215,30 +209,46 @@ namespace MyLibrary {
         books[b_idx].check_out();
     }
 
-    void Library::set_fee(const Patron& p, double f)
+    vector<string> Library::with_fees() const
+    // Возвращает именя пользователей имеющих задолженности по уплате членских взносов
     {
-        // Нахождение пользователя
-        int idx = 0;
-        bool exists = false;
-        for (int i = 0; i<patrons.size(); ++i) {
-            if (patrons[i] == p) {
-                exists = true;
-                idx = i;
-                break;
-            }
-        }
-        if (!exists) error("Library::set_fee(): пользователь не существует");
-        patrons[idx].set_fees(f);
+        vector<string> names;
+
+        for (Patron p : patrons)
+            if (owes_fees(p))
+                names.push_back(p.name());
+
+        return names;
     }
 
-    vector<Patron> Library::get_debtors() const
+    void Library::print_books(ostream& os) const
+    // Вывод списка книг в библиотеке
     {
-        vector<Patron> debtors;
-        for (int i = 0; i<patrons.size(); ++i) {
-            if (patrons[i].fees() > 0)
-                debtors.push_back(patrons[i]);
-        }
-        return debtors;
+        for (Book b : books)
+            os << b;
+    }
+
+    void Library::print_patrons(ostream& os) const
+    // Вывод списка пользователей библиотеки
+    {
+        for (Patron p : patrons)
+            os << p;
+    }
+
+    void Library::print_transactions(ostream& os) const
+    // Вывод библиотечных транзакций
+    {
+        for (Transaction t : transactions)
+            os << t;
+    }
+
+    // Оператор транзакций
+    ostream& operator<<(ostream& os, const Library::Transaction& t)
+    {
+        os << t.patron.name() << " toke " << t.book.title() << " (ISBN: "
+           << t.book.isbn() << ") on " << t.date << '\n';
+
+        return os;
     }
 
 }   // namespace MyLibrary
