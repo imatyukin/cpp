@@ -23,7 +23,9 @@
 #include "exercise.9.5-9.Library.h"
 #include "exercise.9.5-9.Chrono.h"
 
-using namespace MyLibrary;
+using MyLibrary::Library;
+using MyLibrary::Book;
+using MyLibrary::Patron;
 
 void test_my_library() {
 
@@ -57,10 +59,41 @@ void test_my_library() {
                          false));
 
     // Печать списка книг
-    cout << "Книги библиотеки:\n\n";
+    cout << "=== КНИГИ БИБЛИОТЕКИ ===:\n\n";
     my_library.print_books(cout);
 
+    // Создание и добавление пользователей
+    Patron my_patron1 = Patron("Matyukin, Igor",100,0);
+    my_library.add_patron(my_patron1);
+    Patron my_patron2 = Patron("Stroustrup, Bjarne",101,0);
+    my_library.add_patron(my_patron2);
+    my_library.add_patron(Patron("Ritchie, Dennis",102,0));
+    my_library.add_patron(Patron("Kernighan, Brian W.",103,0));
 
+    // Печать списка пользователей библиотеки
+    cout << "\n=== ПОЛЬЗОВАТЕЛИ БИБЛИОТЕКИ ===\n\n";
+    my_library.print_patrons(cout);
+
+    // Проверка состояния книг (выдана ли книга читателю)
+    my_library.check_out(my_book, my_patron1, Chrono::Date{2018, Chrono::Month::nov, 18});
+    my_library.check_out(my_book2, my_patron2, Chrono::Date{2018, Chrono::Month::jul, 26});
+    cout << "\n=== ТРАНЗАКЦИИ ===\n\n";
+    my_library.print_transactions(cout);
+
+    // Установка членских взносов пользователей библиотеки
+    my_library.set_fee(my_patron1,10);
+    my_library.set_fee(my_patron2,15);
+
+    // Печать списка должников библиотеки
+    cout << "\n=== ДОЛЖНИКИ БИБЛИОТЕКИ ===\n\n";
+    for (string n : my_library.with_fees())
+        cout << n << '\n';
+
+    // Проверка состояния книг (выдана ли книга читателю)
+    cout << "\n=== ПРОВЕРКА СОСТОЯНИЯ КНИГ (ВЫДАНА ЛИ КНИГА ЧИТАТЕЛЮ) ===:\n";
+    my_library.check_out(my_book, my_patron2, Chrono::Date{2017, Chrono::Month::may, 24});
+    cout << "\n=== ТРАНЗАКЦИИ ===\n\n";
+    my_library.print_transactions(cout);
 }
 
 int main()

@@ -102,6 +102,8 @@ namespace MyLibrary {
         void add_patron(Patron p);
         // Функция о состоянии книг (выдана ли книга читателю)
         void check_out(Book b, Patron p, Chrono::Date d);
+        // Функция добавления членских взносов
+        void set_fee(Patron p, double f);
 
         // Отчёты
         // Возвращает имена пользователей имеющих задолженности по уплате членских взносов

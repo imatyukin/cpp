@@ -209,6 +209,22 @@ namespace MyLibrary {
         books[b_idx].check_out();
     }
 
+    void Library::set_fee(Patron p, double f)
+    {
+        // Найти пользователя
+        int idx = 0;
+        bool exists = false;
+        for (int i = 0; i<patrons.size(); ++i) {
+            if (patrons[i] == p) {
+                exists = true;
+                idx = i;
+                break;
+            }
+        }
+        if (!exists) error("Library::set_fee(): пользователь не существует");
+        patrons[idx].set_fees(f);
+    }
+
     vector<string> Library::with_fees() const
     // Возвращает именя пользователей имеющих задолженности по уплате членских взносов
     {
@@ -245,8 +261,8 @@ namespace MyLibrary {
     // Оператор транзакций
     ostream& operator<<(ostream& os, const Library::Transaction& t)
     {
-        os << t.patron.name() << " toke " << t.book.title() << " (ISBN: "
-           << t.book.isbn() << ") on " << t.date << '\n';
+        os << t.patron.name() << " взял " << t.book.title() << " (ISBN: "
+           << t.book.isbn() << ") с " << t.date << '\n';
 
         return os;
     }
