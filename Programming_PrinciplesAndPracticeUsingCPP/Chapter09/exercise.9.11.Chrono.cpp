@@ -1,7 +1,7 @@
+// exercise.9.11.Chrono.cpp
 // 11. Design and implement a set of useful helper functions for the Date class with functions such as next_workday()
 // (assume that any day that is not a Saturday or a Sunday is a workday) and week_of_year() (assume that week 1 is the
 // week with January 1 in it and that the first day of a week is a Sunday).
-// exercise.9.11.Chrono.cpp
 
 #include "std_lib_facilities.h"
 #include "exercise.9.11.Chrono.h"
@@ -381,20 +381,11 @@ try
         write(d);
     }
 
-    keep_window_open("~");	// For some Windows(tm) setups
 }
 catch (Chrono::Date::Invalid&) {
     cerr << "error: Invalid date\n";
-    keep_window_open("~");	// For some Windows(tm) setup
     return 1;
 }
 catch (runtime_error& e) {	// this code is to produce error messages
     cout << e.what() << '\n';
-    keep_window_open("~");	// For some Windows(tm) setups
 }
-
-/*
-	This has not been SYSTEMATICALLY tested, so you should be able to find bugs;
-	I'd like to hear about those.
-
-*/
