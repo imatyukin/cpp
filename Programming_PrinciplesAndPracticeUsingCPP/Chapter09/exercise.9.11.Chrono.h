@@ -1,4 +1,8 @@
-// файл exercise.9.11.Chrono.h
+// Файл exercise.9.11.Chrono.h
+//
+// This is example code from Chapter 9.8 "The Date class" of
+// "Programming -- Principles and Practice Using C++" by Bjarne Stroustrup
+//
 
 #include <iostream>
 
@@ -14,18 +18,18 @@ namespace Chrono {
             jan=1, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec
         };
 
-        class Invalid { };                 // to throw as exception
+        class Invalid { };                      // Для генерации исключений
 
-        Date(int y, Month m, int d);       // check for valid date and initialize
-        Date();                            // default constructor
-        // the default copy operations are fine
+        Date(int y, Month m, int d);            // Проверка корректности и инициализация
+        Date();                                 // Конструктор по умолчанию
+        // Копирование по умолчанию нас устраивает
 
-        // non-modifying operations:
+        // Немодифицирующие операции:
         int   day()   const { return d; }
         Month month() const { return m; }
         int   year()  const { return y; }
 
-        // modifying operations:
+        // Модифицирующие операции:
         void add_day(int n);
         void add_month(int n);
         void add_year(int n);
@@ -36,9 +40,9 @@ namespace Chrono {
     };
 
 
-    bool is_date(int y, Date::Month m, int d); // true for valid date
+    bool is_date(int y, Date::Month m, int d);  // true для корректной даты
 
-    bool leapyear(int y);                  // true if y is a leap year
+    bool leapyear(int y);                       // true для високосного года
 
     bool operator==(const Date& a, const Date& b);
     bool operator!=(const Date& a, const Date& b);
@@ -49,3 +53,6 @@ namespace Chrono {
     const Date& default_date();
 
 } // Chrono
+
+
+//------------------------------------------------------------------------------
