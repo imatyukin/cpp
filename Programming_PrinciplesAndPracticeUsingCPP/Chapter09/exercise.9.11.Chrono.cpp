@@ -42,7 +42,7 @@ namespace Chrono {
 
     void Date::add_month(int n)
     {
-        if (n<0) error("add_month(): cnot implemented");	// not yet
+        if (n<0) error("add_month(): not implemented");	// not yet
         // ...
     }
 
@@ -70,7 +70,8 @@ namespace Chrono {
     const Date first_date(1601,Date::jan,1);	// don't try dates anywhere near this far back in time
     // the calendar calculation code is brittle the first date
     // must be the first day of a year divisible by 400
-    const Day first_day = monday;				//Januaray 1, 1600 would have been a Monday (had they had the Georgian calendar)
+    const Day first_day = monday;				//Januaray 1, 1600 would have been a Monday
+                                                // (had they had the Georgian calendar)
 
     const Date& default_date()
     {
@@ -103,8 +104,6 @@ namespace Chrono {
 
     bool leapyear(int y)
     {
-        // See exercise 9-10
-
         // any year divisible by 4 except centenary years not divisible by 400
 
         if (y%4) return false;
@@ -204,7 +203,7 @@ namespace Chrono {
     // e.g. Jan 1 is day #1, Jan 2 is day #1 and feb 3 is day #34
     {
         int m = nmonth(a.month()-1);
-        if (Date::feb<a.month() && leapyear(a.year())) ++m;	// adjust if we passed a dat added for a leapyear
+        if (Date::feb<a.month() && leapyear(a.year())) ++m;	// adjust if we passed a date added for a leapyear
         return m+a.day();
     }
 
@@ -302,7 +301,7 @@ namespace Chrono {
     //	week #1 is the week with the year's first Thursday in it
     //	Monday is the first day of the week
 
-    // 0 means that the date is in the last week ofthe previous year
+    // 0 means that the date is in the last week of the previous year
     {
         int diy = day_in_year(d);	// jan 1 is day #1
         Day jan1 = day_of_week(Date(d.year(),Date::jan,1));
