@@ -6,43 +6,43 @@
 namespace Chrono {
 
 
-    // Операторы класса Date::Day
+    // Операторы класса Day
 
-    Date::Day operator+(const Date::Day& d, int n)
+    Day operator+(const Day& d, int n)
     {
         int r{int(d)+n};
         r %= 7;    // Количество дней в неделе
-        return Date::Day(r);
+        return Day(r);
     }
 
-    Date::Day& operator+=(Date::Day& d, int n)
+    Day& operator+=(Day& d, int n)
     {
         d = d + n;
         return d;
     }
 
-    ostream& operator<<(ostream& os, const Date::Day& d)
+    ostream& operator<<(ostream& os, const Day& d)
     {
         switch (d) {
-            case Date::Day::sunday:
+            case Day::sunday:
                 os << "Sunday";
                 break;
-            case Date::Day::monday:
+            case Day::monday:
                 os << "Monday";
                 break;
-            case Date::Day::tuesday:
+            case Day::tuesday:
                 os << "Tuesday";
                 break;
-            case Date::Day::wednesday:
+            case Day::wednesday:
                 os << "Wednesday";
                 break;
-            case Date::Day::thursday:
+            case Day::thursday:
                 os << "Thursday";
                 break;
-            case Date::Day::friday:
+            case Day::friday:
                 os << "Friday";
                 break;
-            case Date::Day::saturday:
+            case Day::saturday:
                 os << "Saturday";
                 break;
             default:
@@ -52,18 +52,18 @@ namespace Chrono {
     }
 
 
-    // Операторы класса Date::Month
+    // Операторы класса Month
 
-    Date::Month operator+(const Date::Month& m, int n)
+    Month operator+(const Month& m, int n)
     {
         int r{int(m)+n};
-        r %= int(Date::Month::dec);
+        r %= int(Month::dec);
 
-        if (r == 0) return Date::Month::dec;            // Отменяет эффект по модулю
-        return Date::Month(r);
+        if (r == 0) return Month::dec;            // Отменяет эффект по модулю
+        return Month(r);
     }
 
-    Date::Month& operator++(Date::Month& m)
+    Month& operator++(Month& m)
     {
         m = m + 1;
         return m;
@@ -105,23 +105,23 @@ namespace Chrono {
             return is;
         }
 
-        dd = Date{y, Date::Month(m), d};
+        dd = Date{y, Month(m), d};
 
         return is;
     }
 
 
-    // Вспомогательные функции Date:Month
+    // Вспомогательные функции класса Month
 
-    int month_days(Date::Month m, int y)
+    int month_days(Month m, int y)
     {
         switch (m) {
-            case Date::Month::apr:
-            case Date::Month::jun:
-            case Date::Month::sep:
-            case Date::Month::nov:
+            case Month::apr:
+            case Month::jun:
+            case Month::sep:
+            case Month::nov:
                 return 30;
-            case Date::Month::feb:
+            case Month::feb:
                 if (leapyear(y))
                     return 29;
                 return 28;
@@ -149,22 +149,22 @@ namespace Chrono {
         return n;
     }
 
-    bool is_date(int y, Date::Month m, int d)
+    bool is_date(int y, Month m, int d)
     {
         if (y < epoch_year) return false;               // Ограничение представления
         if (d <= 0) return false;                       // d должен быть положительным
-        if (m < Date::Month::jan || m > Date::Month::dec) return false;
+        if (m < Month::jan || m > Month::dec) return false;
 
         int month_days{31};                             // В большинстве месяцев 31 день
 
         switch (m) {
-            case Date::Month::feb:                      // Длина февраля варьируется
+            case Month::feb:                            // Длина февраля варьируется
                 month_days = (leapyear(y)) ? 29 : 28;
                 break;
-            case Date::Month::apr:
-            case Date::Month::jun:
-            case Date::Month::sep:
-            case Date::Month::nov:
+            case Month::apr:
+            case Month::jun:
+            case Month::sep:
+            case Month::nov:
                 month_days = 30;
                 break;
             default:                                    // Избегание предупреждений компилятора
@@ -174,20 +174,20 @@ namespace Chrono {
         return month_days >= d;
     }
 
-    long int days_since_epoch(int y, Date::Month m, int d)
+    long int days_since_epoch(int y, Month m, int d)
     {
         if (!is_date(y, m, d)) throw Date::Invalid{};
 
         int dse{0};
 
         dse += (y-epoch_year)*365 + n_leaps(y);
-        for (Date::Month i = Date::Month::jan; i < m; ++i)
+        for (Month i = Month::jan; i < m; ++i)
             dse += month_days(i, y);
 
         return (dse + d - 1);                           // 1 января 1970 - нулевой день
     }
 
-    Date::Day day_of_week(const Date& d)
+    Day day_of_week(const Date& d)
     {
         return epoch_dow + (d.days_since_epoch() % 7);
     }
@@ -195,7 +195,7 @@ namespace Chrono {
     Date next_Sunday(const Date& d)
     // Возвращает следующее воскресенье даты d. Если d воскресенье, то за неделю до
     {
-        Date::Day dow{day_of_week(d)};                  // День недели для даты d
+        Day dow{day_of_week(d)};                        // День недели для даты d
         Date r{d};
         r.add_day(7 - int(dow));
         return r;
@@ -203,19 +203,19 @@ namespace Chrono {
 
     Date next_workday(const Date& d)
     {
-        Date::Day dow{day_of_week(d)};                  // Неделя для даты d
+        Day dow{day_of_week(d)};                        // Неделя для даты d
         Date r{d};
 
         r.add_day(1);
-        if (dow == Date::Day::saturday) r.add_day(1);
-        if (dow == Date::Day::friday ) r.add_day(2);
+        if (dow == Day::saturday) r.add_day(1);
+        if (dow == Day::friday ) r.add_day(2);
 
         return r;
     }
 
     int week_of_year(const Date& d)
     {
-        Date wd{Date(d.year(), Date::Month::jan, 1)};   // Дата первой недели
+        Date wd{Date(d.year(), Month::jan, 1)};         // Дата первой недели
         int week{1};
 
         wd = next_Sunday(wd);
@@ -248,7 +248,7 @@ namespace Chrono {
         return dse - Chrono::days_since_epoch(year(), month(), 1) + 1;
     }
 
-    Date::Month Date::month() const
+    Month Date::month() const
     {
         // Оставшиеся дни с 1 января
         int y{year()};
