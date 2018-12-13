@@ -36,59 +36,59 @@ Money::Money(long int dollars, long int cents) : c_amount{dollars*100+cents} { }
 Money::Money(long int amount) : c_amount{amount} { };
 Money::Money() : c_amount{0} { };
 
-Money operator-(const Money& rhs)
+Money operator+(const Money& a, const Money& b)
 {
-    return Money{-rhs.amount()};
+    return Money{a.amount()+b.amount()};
 }
 
-Money operator+(const Money& lhs, const Money& rhs)
+Money operator-(const Money& a, const Money& b)
 {
-    return Money{lhs.amount()+rhs.amount()};
+    return Money{a.amount()-b.amount()};
 }
 
-Money operator-(const Money& lhs, const Money& rhs)
+Money operator-(const Money& b)
 {
-    return Money{lhs.amount()-rhs.amount()};
+    return Money{-b.amount()};
 }
 
-Money operator*(const Money& lhs, double rhs)
+Money operator*(const Money& a, double b)
 {
-    return Money{ round_d_to_li(lhs.amount()*rhs) };
+    return Money{ round_d_to_li(a.amount()*b) };
 }
 
-Money operator*(double lhs, const Money& rhs)
+Money operator*(double a, const Money& b)
 {
-    return Money{ round_d_to_li(lhs*rhs.amount()) };
+    return Money{ round_d_to_li(a*b.amount()) };
 }
 
-Money operator/(const Money& lhs, double rhs)
+Money operator/(const Money& a, double b)
 {
-    if (rhs == 0) throw Money::Division_by_zero{};
+    if (b == 0) throw Money::Division_by_zero{};
 
-    return Money{ round_d_to_li(lhs.amount()/rhs) };
+    return Money{ round_d_to_li(a.amount()/b) };
 }
 
-double operator/(const Money& lhs, const Money& rhs)
+double operator/(const Money& a, const Money& b)
 {
-    if (rhs.amount() == 0) throw Money::Division_by_zero{};
+    if (b.amount() == 0) throw Money::Division_by_zero{};
 
-    return (double(lhs.amount())/rhs.amount());
+    return (double(a.amount())/b.amount());
 }
 
-bool operator==(const Money& lhs, const Money& rhs)
+bool operator==(const Money& a, const Money& b)
 {
-    return (lhs.amount() == rhs.amount());
+    return (a.amount() == b.amount());
 }
 
-bool operator!=(const Money& lhs, const Money& rhs)
+bool operator!=(const Money& a, const Money& b)
 {
-    return (lhs.amount() != rhs.amount());
+    return (a.amount() != b.amount());
 }
 
 ostream& operator<<(ostream& os, const Money& money)
 {
     os << currency << money.dollars() << '.';
-    if (abs(money.cents()) < 10) os << '0';             // ведущий 0
+    if (abs(money.cents()) < 10) os << '0';             // получить $1,01 вместо $1,1
     os << abs(money.cents());
 
     return os;
@@ -103,7 +103,7 @@ istream& operator>>(istream& is, Money& money)
     is >> cur >> dollars >> dot >> d >> u;
     if (!is) return is;
     if (cur != currency || dot != '.' || !isdigit(d) || !isdigit(u)) {
-        is.clear(ios_base::failbit);
+        is.clear(ios_base::failbit);                    // установить бит сбоя
         return is;
     }
 
@@ -119,18 +119,18 @@ int main()
 try{
 
     Money m1;
-    Money m2(105);
-    Money m3(5,12);
+    Money m2(101);
+    Money m3(1,23);
 
     cout << "m1: " << m1 << endl;
-    cout << "m2(105): " << m2 << endl;
-    cout << "m3(5,12): " << m3 << endl;
+    cout << "m2(101): " << m2 << endl;
+    cout << "m3(1,23): " << m3 << endl;
     cout << "-m3: " << -m3 << endl;
 
     cout << m2 << " + " << m3 << " = " << m2+m3 << endl;
     cout << m2 << " - " << m3 << " = " << m2-m3 << endl;
-    cout << "5 * " << m2 << " = " << 5*m2 << endl;
-    cout << m2 << " * 5 = " << m2*5 << endl;
+    cout << "2 * " << m2 << " = " << 2*m2 << endl;
+    cout << m2 << " * 2 = " << m2*2 << endl;
 
     cout << m3 << " - " << m2 << " = " << m3-m2 << endl;
 
