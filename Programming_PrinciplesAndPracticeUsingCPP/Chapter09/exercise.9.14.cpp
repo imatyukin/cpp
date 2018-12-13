@@ -22,12 +22,12 @@ public:
     class Division_by_zero { };                         // пользовательское исключение
 
     Money(long int dollars, long int cents);            // конструктор в долларах и центах
-    Money(long int amount);                             // конструктор на сумму в центах
-    Money();                                            // конструктор по умолчанию, количество 0
+    Money(long int amount);                             // конструктор суммы в центах
+    Money();                                            // конструктор по умолчанию, сумма 0
 
-    long int amount() const { return c_amount; };
+    long int amount() const { return c_amount; };       // вспомогательная сумма в центах
     long int dollars() const { return c_amount/100; };  // извлечение долларов
-    long int cents() const { return c_amount%100; };
+    long int cents() const { return c_amount%100; };    // остаток центов
 private:
     long int c_amount;                                  // количество денег в центах
 };
@@ -134,8 +134,8 @@ try{
 
     cout << m3 << " - " << m2 << " = " << m3-m2 << endl;
 
-    cout << Money(1,0) << " / 7 = " << Money(1,0)/7 << endl;
-    cout << Money(0,9) << " / 6 = " << Money(0,9)/6 << endl << endl;
+    cout << Money(1,0) << " / 5 = " << Money(1,0)/5 << endl;
+    cout << Money(0,9) << " / 4 = " << Money(0,9)/4 << endl << endl;
 
     return 0;
 }
