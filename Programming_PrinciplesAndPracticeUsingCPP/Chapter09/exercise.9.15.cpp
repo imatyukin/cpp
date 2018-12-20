@@ -174,11 +174,6 @@ try {
     cout << "m3(5,12): " << m3 << endl;
     cout << "-m3: " << -m3 << endl;
 
-    //Money m5;
-    //cout << "Enter amount as in CUR xxx.xx: ";
-    //cin >> m5;
-    //cout << "You entered " << m5 << endl;
-
     cout << m2 << " + " << m3 << " = " << m2+m3 << endl;
     cout << m2 << " - " << m3 << " = " << m2-m3 << endl;
     cout << "5 * " << m2 << " = " << 5*m2 << endl;
