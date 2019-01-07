@@ -25,6 +25,8 @@ int main()
     cout << "Type \"unsigned long int\" occupies "      << sizeof(unsigned long int)      << " bytes." << endl;
     // unsigned long long, unsigned long long int
     cout << "Type \"unsigned long long int\" occupies " << sizeof(unsigned long long int) << " bytes." << endl;
+    // char
+    cout << "Type \"char\" occupies "                   << sizeof(char)                   << " bytes." << endl;
     // size_t is an unsigned integer type that is defined in the Standard Library header cstddef.
     cout << "Type \"std::size_t\" occupies "            << sizeof(size_t)                 << " bytes." << endl;
 }
