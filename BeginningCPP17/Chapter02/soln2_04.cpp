@@ -11,29 +11,34 @@ int main()
 {
     std::cout << "Tree height calculation.\n" << std::endl;
 
-    const unsigned int inches_per_foot {12};
+    const double pi {3.141592653589793238};
+    const double pi_degrees {180.0};
+    const double inches_per_foot {12.0};
 
-    unsigned long int height_feet {}, height_inches {}; // the height of the tree in feet and inches
+    double height_feet {}, height_inches {};    // the height of the tree in feet and inches
 
-    unsigned long int h {};                             // h in inches
+    double h {};                                // h in inches
     std::cout << "Enter the height, h, of your eye when peering into your angle-measuring device in inches: ";
     std::cin >> h;
 
-    unsigned long int d_feet {}, d_inches {};           // d in feet and inches
+    double d_feet {}, d_inches {};              // d in feet and inches
     std::cout << "Enter the distance, d, you are from a tree in feet and inches: ";
     std::cin >> d_feet >> d_inches;
 
-    double angle {};                                    // angle in degrees
+    double angle {};                            // angle in degrees
     std::cout << "Enter the angle between the horizontal and a line to the top of a tree in degrees: ";
     std::cin >> angle;
 
-    d_inches = d_feet * inches_per_foot + d_inches;
+    angle *= pi / pi_degrees;                   // convert angle to radians
+
+    d_inches += d_feet * inches_per_foot;
 
     height_inches = h + d_inches * std::tan(angle);
 
-    height_feet = height_inches / inches_per_foot;
-    height_inches = height_inches % inches_per_foot;
+    height_feet = static_cast<unsigned int>(height_inches) / static_cast<unsigned int>(inches_per_foot);
+    height_inches = static_cast<unsigned int>(std::round(height_inches)) % static_cast<unsigned int>(inches_per_foot);
 
-    std::cout << "The height of the tree in feet is "
-              << height_feet << "." << height_inches << std::endl;
+    std::cout << "The height of the tree is "
+              << height_feet << " feet "
+              << height_inches << " inches." << std::endl;
 }
