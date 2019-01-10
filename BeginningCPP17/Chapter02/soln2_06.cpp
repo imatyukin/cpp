@@ -5,7 +5,6 @@
 // park. What makes this a brain teaser, though, is that this can be done solely with the operators you’ve learned about
 // in this chapter!
 #include <iostream>
-#include <cmath>
 
 int main()
 {
