@@ -3,29 +3,30 @@
 // (w/(h*h)). Write a program to calculate the BMI from a weight entered in pounds and a height entered in feet and
 // inches. A kilogram is 2.2 pounds, and a foot is 0.3048 meters.
 #include <iostream>
+#include <iomanip>
 
 int main()
 {
     std::cout << "Calculation of body mass index (BMI).\n" << std::endl;
 
-    const double kg {2.2};
+    const double lbs_per_kg {2.2};
     const double inches_per_foot {12.0};
-    const double m {0.3048};
+    const double meters_per_foot {0.3048};
 
-    double w {}, h {}, bmi {};
-
-    double weight_lb;
+    double weight_lbs;
     std::cout << "Enter your weight in pounds: ";
-    std::cin >> weight_lb;
+    std::cin >> weight_lbs;
 
-    double height_feet, height_inches;
+    unsigned int height_feet, height_inches;
     std::cout << "Enter your height in feet and inches: ";
     std::cin >> height_feet >> height_inches;
     const double height_ft {height_feet + height_inches / inches_per_foot};
 
-    w = weight_lb / kg;
-    h = height_ft * m;
-    bmi = w / (h * h);
+    const double w {weight_lbs / lbs_per_kg};
+    const double h {height_ft * meters_per_foot};
+    const double bmi {w / (h * h)};
 
-    std::cout << "Your body mass index (BMI) is " << bmi << std::endl;
+    std::cout << "Your body mass index (BMI) is "
+              << std::fixed << std::setprecision(1)
+              << bmi << std::endl;
 }
