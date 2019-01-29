@@ -25,10 +25,10 @@ int main()
     std::cout << "display the single integer variable as hexadecimal = "
               << std::hex << std::showbase << std::internal << std::setfill('0') << pack4chars << std::endl;
 
-    char unpack_c0 = pack4chars >> 24;
-    char unpack_c1 = pack4chars >> 16;
-    char unpack_c2 = pack4chars >> 8;
-    char unpack_c3 = pack4chars;
+    int unpack_c0 = pack4chars >> 24;
+    int unpack_c1 = pack4chars >> 16;
+    int unpack_c2 = pack4chars >> 8;
+    int unpack_c3 = pack4chars;
 
     const unsigned int mask_swap_left_four_bits {0xF0};
     const unsigned int mask_swap_right_four_bits {0x0F};
@@ -37,28 +37,25 @@ int main()
     const unsigned int mask_swap_left_adj_single_bits {0xAA};
     const unsigned int mask_swap_right_adj_single_bits {0x55};
 
-    std::cout << "output in reverse order, with the low-order byte first:" << std::endl;
-    std::cout << unpack_c3;
-    c3 = (unpack_c3 & mask_swap_left_four_bits) >> 4 | (unpack_c3 & mask_swap_right_four_bits) << 4;
-    c3 = (c3 & mask_swap_left_adj_pairs) >> 2 | (c3 & mask_swap_right_adj_pairs) << 2;
-    c3 = (c3 & mask_swap_left_adj_single_bits) >> 1 | (c3 & mask_swap_right_adj_single_bits) << 1;
-    std::cout << " = " << std::bitset<8>(static_cast<unsigned long long int>(c3)) << std::endl;
+    std::cout << std::dec << "output in reverse order, with the low-order byte first:" << std::endl;
 
-    std::cout << unpack_c2;
-    c2 = (unpack_c2 & mask_swap_left_four_bits) >> 4 | (unpack_c2 & mask_swap_right_four_bits) << 4;
-    c2 = (c2 & mask_swap_left_adj_pairs) >> 2 | (c2 & mask_swap_right_adj_pairs) << 2;
-    c2 = (c2 & mask_swap_left_adj_single_bits) >> 1 | (c2 & mask_swap_right_adj_single_bits) << 1;
-    std::cout << " = " << std::bitset<8>(static_cast<unsigned long long int>(c2)) << std::endl;
+    unpack_c3 = (unpack_c3 & mask_swap_left_four_bits) >> 4 | (unpack_c3 & mask_swap_right_four_bits) << 4;
+    unpack_c3 = (unpack_c3 & mask_swap_left_adj_pairs) >> 2 | (unpack_c3 & mask_swap_right_adj_pairs) << 2;
+    unpack_c3 = (unpack_c3 & mask_swap_left_adj_single_bits) >> 1 | (unpack_c3 & mask_swap_right_adj_single_bits) << 1;
+    std::cout << c3 << " = " << std::bitset<8>(static_cast<unsigned long long int>(unpack_c3)) << std::endl;
 
-    std::cout << unpack_c1;
-    c1 = (unpack_c1 & mask_swap_left_four_bits) >> 4 | (unpack_c1 & mask_swap_right_four_bits) << 4;
-    c1 = (c1 & mask_swap_left_adj_pairs) >> 2 | (c1 & mask_swap_right_adj_pairs) << 2;
-    c1 = (c1 & mask_swap_left_adj_single_bits) >> 1 | (c1 & mask_swap_right_adj_single_bits) << 1;
-    std::cout << " = " << std::bitset<8>(static_cast<unsigned long long int>(c1)) << std::endl;
+    unpack_c2 = (unpack_c2 & mask_swap_left_four_bits) >> 4 | (unpack_c2 & mask_swap_right_four_bits) << 4;
+    unpack_c2 = (unpack_c2 & mask_swap_left_adj_pairs) >> 2 | (unpack_c2 & mask_swap_right_adj_pairs) << 2;
+    unpack_c2 = (unpack_c2 & mask_swap_left_adj_single_bits) >> 1 | (unpack_c2 & mask_swap_right_adj_single_bits) << 1;
+    std::cout << c2 << " = " << std::bitset<8>(static_cast<unsigned long long int>(unpack_c2)) << std::endl;
 
-    std::cout << unpack_c0;
-    c0 = (unpack_c0 & mask_swap_left_four_bits) >> 4 | (unpack_c0 & mask_swap_right_four_bits) << 4;
-    c0 = (c0 & mask_swap_left_adj_pairs) >> 2 | (c0 & mask_swap_right_adj_pairs) << 2;
-    c0 = (c0 & mask_swap_left_adj_single_bits) >> 1 | (c0 & mask_swap_right_adj_single_bits) << 1;
-    std::cout << " = " << std::bitset<8>(static_cast<unsigned long long int>(c0)) << std::endl;
+    unpack_c1 = (unpack_c1 & mask_swap_left_four_bits) >> 4 | (unpack_c1 & mask_swap_right_four_bits) << 4;
+    unpack_c1 = (unpack_c1 & mask_swap_left_adj_pairs) >> 2 | (unpack_c1 & mask_swap_right_adj_pairs) << 2;
+    unpack_c1 = (unpack_c1 & mask_swap_left_adj_single_bits) >> 1 | (unpack_c1 & mask_swap_right_adj_single_bits) << 1;
+    std::cout << c1 << " = " << std::bitset<8>(static_cast<unsigned long long int>(unpack_c1)) << std::endl;
+
+    unpack_c0 = (unpack_c0 & mask_swap_left_four_bits) >> 4 | (unpack_c0 & mask_swap_right_four_bits) << 4;
+    unpack_c0 = (unpack_c0 & mask_swap_left_adj_pairs) >> 2 | (unpack_c0 & mask_swap_right_adj_pairs) << 2;
+    unpack_c0 = (unpack_c0 & mask_swap_left_adj_single_bits) >> 1 | (unpack_c0 & mask_swap_right_adj_single_bits) << 1;
+    std::cout << c0 << " = " << std::bitset<8>(static_cast<unsigned long long int>(unpack_c0)) << std::endl;
 }
