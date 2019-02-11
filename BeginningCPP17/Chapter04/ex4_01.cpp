@@ -12,6 +12,7 @@ int main()
     std::cout << "Enter a second character: ";
     std::cin >> second;
 
+    std::cout << std::boolalpha;
     std::cout << "The value of the expression " << first << '<' << second
               << " is: " << (first < second) << std::endl;
     std::cout << "The value of the expression " << first << "==" << second
