@@ -25,7 +25,7 @@ int main() {
             std::cout << b << " is exactly multiple of " << a << std::endl;
         }
         else {
-            std::cout << "This are not exactly multiple numbers" << std::endl;
+            std::cout << "These are not exactly multiple numbers" << std::endl;
         }
     }
 }
