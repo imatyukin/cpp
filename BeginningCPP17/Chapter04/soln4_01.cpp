@@ -6,7 +6,7 @@
 int main()
 {
     int a, b;
-    std::cout << "Enter two integers: ";
+    std::cout << "Input two integers: ";
     std::cin >> a >> b;
     std::cout << "a = " << a << ", b = " << b << std::endl;
 
