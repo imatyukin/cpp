@@ -10,11 +10,12 @@ using namespace std;
 int main()
 {
     vector<unsigned int> v;
-    unsigned int x{}, count{};
+    unsigned int bound{};
+    size_t count{};
 
     cout << "Enter arbitrary upper bound: ";
-    cin >> x;
-    for (unsigned int i = 1; i <= x; i++)
+    cin >> bound;
+    for (unsigned int i = 1; i <= bound; i++)
         v.push_back(i);
 
     for (auto i : v) {
