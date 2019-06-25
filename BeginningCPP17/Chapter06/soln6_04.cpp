@@ -16,6 +16,7 @@ int main()
     cin >> userSize;
 
     vector<unique_ptr<double>> vec;
+    vec.reserve(userSize);              /* number of iterations */
     for(int i = 0; i < userSize; ++i) {
         vec.push_back(make_unique<double>(1.0 / pow(i + 1, 2)));
     }
