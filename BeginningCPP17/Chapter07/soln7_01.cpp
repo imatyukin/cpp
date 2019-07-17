@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -19,11 +20,12 @@ void DisplayStudentData(const StudentInfo& student);
 
 int main()
 {
-    StudentInfo* studentList;
-    studentList = new (nothrow) StudentInfo[3];
+    vector<StudentInfo> studentList;
+    // Push back new subject created with default constructor
+    studentList.emplace_back(StudentInfo());
     int i = 0;
 
-    while (i < 10) {
+    while (1) {
         ReadStudentData(studentList[i]);
         DisplayStudentData(studentList[i]);
         i++;
