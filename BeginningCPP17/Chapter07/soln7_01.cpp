@@ -21,7 +21,6 @@ void DisplayStudentData(const StudentInfo& student);
 int main()
 {
     vector<StudentInfo> studentList;
-    // Push back new subject created with default constructor
     studentList.emplace_back(StudentInfo());
 
     char c;
