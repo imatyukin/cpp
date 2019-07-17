@@ -19,12 +19,14 @@ void DisplayStudentData(const StudentInfo& student);
 
 int main()
 {
-    const int SIZE = 2;
-    StudentInfo studentList[SIZE];
+    StudentInfo* studentList;
+    studentList = new (nothrow) StudentInfo[3];
+    int i = 0;
 
-    for (int i = 0; i < SIZE; i++) {
+    while (i < 10) {
         ReadStudentData(studentList[i]);
         DisplayStudentData(studentList[i]);
+        i++;
     }
 }
 
