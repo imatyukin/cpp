@@ -23,13 +23,24 @@ int main()
     vector<StudentInfo> studentList;
     // Push back new subject created with default constructor
     studentList.emplace_back(StudentInfo());
-    int i = 0;
 
-    while (1) {
+    char c;
+    int i = 0;
+    cout << "Press 'q' to quit or enter to continue." << endl;
+
+    while(true) {
+        c = getchar();
+        if(c == 'q')
+            break;
         ReadStudentData(studentList[i]);
         DisplayStudentData(studentList[i]);
         i++;
+        cout << "\nPress 'q' to quit or enter to continue.\n" << endl;
     }
+
+    cout << "\nExit" << endl;
+
+    return 0;
 }
 
 void ReadStudentData(StudentInfo& student) {
