@@ -20,16 +20,10 @@ void DisplayStudentData(const StudentInfo& student);
 int main()
 {
     vector<StudentInfo> studentList;
-
     char c;
-    int i = 0;
-    cout << "Press 'd' to display the average grade or any key to continue." << endl;
+    int i {};
 
     while(true) {
-        c = getchar();
-        if(c == 'd')
-            break;
-
         studentList.emplace_back(StudentInfo());
         cout << "Enter student first name: ";
         cin >> studentList[i].first_name;
@@ -38,13 +32,14 @@ int main()
         getline(cin, studentList[i].grades);
         i++;
         cout << "\nPress 'd' to display the average grade or any key to continue.\n" << endl;
+        c = getchar();
+        if(c == 'd')
+            break;
     }
 
     for(int j=0; j<=i; j++) {
         DisplayStudentData(studentList[j]);
     }
-
-    cout << "\nExit" << endl;
 
     return 0;
 }
