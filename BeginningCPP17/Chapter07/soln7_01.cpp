@@ -21,20 +21,28 @@ void DisplayStudentData(const StudentInfo& student);
 int main()
 {
     vector<StudentInfo> studentList;
-    studentList.emplace_back(StudentInfo());
 
     char c;
     int i = 0;
-    cout << "Press 'q' to quit or any key to continue." << endl;
+    cout << "Press 'd' to display the average grade or any key to continue." << endl;
 
     while(true) {
         c = getchar();
-        if(c == 'q')
+        if(c == 'd')
             break;
-        ReadStudentData(studentList[i]);
-        DisplayStudentData(studentList[i]);
+
+        studentList.emplace_back(StudentInfo());
+        cout << "Enter student first name: ";
+        cin >> studentList[i].first_name;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "and " << studentList[i].first_name << "'s grades: ";
+        getline(cin, studentList[i].grades);
         i++;
-        cout << "\nPress 'q' to quit or any key to continue.\n" << endl;
+        cout << "\nPress 'd' to display the average grade or any key to continue.\n" << endl;
+    }
+
+    for(int j=0; j<=i; j++) {
+        DisplayStudentData(studentList[j]);
     }
 
     cout << "\nExit" << endl;
@@ -42,17 +50,9 @@ int main()
     return 0;
 }
 
-void ReadStudentData(StudentInfo& student) {
-    cout << "Enter student first name: ";
-    cin >> student.first_name;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cout << "and " << student.first_name << "'s grades: ";
-    getline(cin, student.grades);
-}
-
 void DisplayStudentData(const StudentInfo& student)
 {
-    cout << "The first name is: " << student.first_name << endl;
+    cout << student.first_name << " ";
 
     istringstream is(student.grades);
     int n;
@@ -65,5 +65,5 @@ void DisplayStudentData(const StudentInfo& student)
     }
     avg = total / count;
 
-    cout << "Average grade of " << student.first_name << " is: " << avg << endl;
+    cout << avg << endl;
 }
