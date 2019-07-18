@@ -15,7 +15,6 @@ struct StudentInfo
     string grades;
 };
 
-void ReadStudentData(StudentInfo& student);
 void DisplayStudentData(const StudentInfo& student);
 
 int main()
