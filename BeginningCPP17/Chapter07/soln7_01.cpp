@@ -25,7 +25,7 @@ int main()
 
     char c;
     int i = 0;
-    cout << "Press 'q' to quit or enter to continue." << endl;
+    cout << "Press 'q' to quit or any key to continue." << endl;
 
     while(true) {
         c = getchar();
@@ -34,7 +34,7 @@ int main()
         ReadStudentData(studentList[i]);
         DisplayStudentData(studentList[i]);
         i++;
-        cout << "\nPress 'q' to quit or enter to continue.\n" << endl;
+        cout << "\nPress 'q' to quit or any key to continue.\n" << endl;
     }
 
     cout << "\nExit" << endl;
