@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <iomanip>
 
 using namespace std;
 
@@ -15,11 +16,10 @@ struct StudentInfo
     string grades;
 };
 
-void DisplayStudentData(const StudentInfo& student);
-
 int main()
 {
     vector<StudentInfo> studentList;
+    size_t max_length {};
     char c;
     int i {};
 
@@ -27,6 +27,8 @@ int main()
         studentList.emplace_back(StudentInfo());
         cout << "Enter student first name: ";
         cin >> studentList[i].first_name;
+        if (max_length < studentList[i].first_name.length())
+            max_length = studentList[i].first_name.length();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cout << "and " << studentList[i].first_name << "'s grades: ";
         getline(cin, studentList[i].grades);
@@ -37,27 +39,26 @@ int main()
             break;
     }
 
-    for(int j=0; j<=i; j++) {
-        DisplayStudentData(studentList[j]);
+    const size_t perline {3};
+
+    for (size_t j {}; j <= i; ++j) {
+        int n {};
+        int total {};
+        int count {};
+        int avg {};
+        istringstream is(studentList[j].grades);
+        while(is >> n) {
+            total += n;
+            count++;
+        }
+        if(count == 0) exit(0);
+        avg = total / count;
+        cout << "  " << left << setw(max_length) << studentList[j].first_name
+             << right << setw(2) << avg;
+        if((j+1) % perline) continue;
+        cout << endl;
     }
+    cout << endl;
 
     return 0;
-}
-
-void DisplayStudentData(const StudentInfo& student)
-{
-    cout << student.first_name << " ";
-
-    istringstream is(student.grades);
-    int n;
-    int total {};
-    int count {};
-    int avg {};
-    while( is >> n ) {
-        total += n;
-        count++;
-    }
-    avg = total / count;
-
-    cout << avg << endl;
 }
