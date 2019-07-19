@@ -51,7 +51,7 @@ int main()
             total += n;
             count++;
         }
-        if(count == 0) exit(0);
+        if(count == 0) break;
         avg = total / count;
         cout << "  " << left << setw(max_length) << studentList[j].first_name
              << right << setw(2) << avg;
