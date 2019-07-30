@@ -4,31 +4,30 @@
 // Words and counts should align in columns. The words should align to the left; the counts to the right. There should
 // be three words per row in your table.
 #include <iostream>
-#include <string>
-#include <sstream>
-#include <vector>
+#include <unordered_map>
+#include <iomanip>
 
-std::vector<std::string> words;
-
-int main(int argc, char** argv) {
-    // get the data from argv
-    words = std::vector<std::string>(argv, argv + argc);
-
-    char quit[] = "quit";
-    int total_words = 0;
-
-    std::string line;
-    // grab a line at a time
-    while(std::getline(std::cin, line) && line != quit) {
-        // clear the vector of words
-        words.clear();
-        // make a string stream to read words from that line
-        std::stringstream ss(line);
-        // grab all the words into a vector
-        std::string word;
-        while(ss >> word) {
-            words.push_back(word);
-        }
-        std::cout <<"You entered " <<words.size() <<" words." <<std::endl;
+int main() {
+    std::unordered_map<std::string, unsigned> dict;
+    for (std::string word; std::cin >> word;) {
+        ++dict[word];
     }
+
+    size_t max_length {};
+    for (const auto &d : dict) {
+        if (max_length < d.first.length()) max_length = d.first.length();
+    }
+    std::cout << "Number of distinct words are: " << dict.size() << "\n";
+
+    size_t count {};
+    const size_t perline {3};
+
+    for (const auto &d : dict) {
+        std::cout << std::setw(max_length) << std::left << d.first
+                  << std::setw(4) << std::right << d.second << "  ";
+        if (!(++count % perline))
+            std::cout << std::endl;
+    }
+
+    std::cout << std::endl;
 }
