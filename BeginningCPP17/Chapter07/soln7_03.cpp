@@ -14,16 +14,13 @@ std::vector<std::string> words;
 
 int main(int argc, char** argv) {
     std::string toSearch;
-    std::string toSearch_original;
     std::cout << "Enter the word to be found in the string: " << std::endl;
     getline(std::cin, toSearch);
-    toSearch_original = toSearch;
-
     for(size_t i {0}; i < toSearch.length(); i++)
         toSearch[i]=tolower(toSearch[i]);
 
     std::string asterisk {"*"};
-    for(size_t i {1}; i < toSearch_original.length(); ++i) {
+    for(size_t i {1}; i < toSearch.length(); ++i) {
         asterisk += "*";
     }
 
@@ -31,7 +28,6 @@ int main(int argc, char** argv) {
     // get the data from argv
     words = std::vector<std::string>(argv, argv + argc);
     char quit[] = "quit";
-    int total_words = 0;
     std::string line;
     // grab a line at a time
     while(std::getline(std::cin, line) && line != quit) {
@@ -44,9 +40,21 @@ int main(int argc, char** argv) {
         while(ss >> word)
             words.push_back(word);
 
-        replace(words.begin(), words.end(), std::string(toSearch_original), std::string(asterisk));
+        std::vector<std::string> words_original(words);
 
-        for (auto i: words)
-            std::cout << i << " ";
+        for (size_t i {}; i < words.size(); i++) {
+            for (size_t j {}; j < words[i].size(); j++)
+                if (words[i][j] >= 'A' && words[i][j] <= 'Z')
+                    words[i][j] = tolower(words[i][j]);
+        }
+
+        replace(words.begin(), words.end(), std::string(toSearch), std::string(asterisk));
+
+        for (size_t i {}; i < words_original.size(); ++i) {
+            if (words[i] == asterisk)
+                std::cout << words[i] << " ";
+            else
+                std::cout << words_original[i] << " ";
+        }
     }
 }
