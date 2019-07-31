@@ -10,9 +10,6 @@
 #include <string>
 #include <sstream>
 
-#include <algorithm>
-#include <cctype>
-
 std::vector<std::string> words;
 
 int main(int argc, char** argv) {
