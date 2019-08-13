@@ -7,7 +7,7 @@
 #include <sstream>
 
 std::vector<std::string> words;
-std::vector<std::string> new_words;
+std::vector<std::string> list;
 
 int main(int argc, char** argv) {
     std::cout << "Enter a text string of arbitrary length terminated by 'quit': " << std::endl;
@@ -32,12 +32,12 @@ int main(int argc, char** argv) {
     for (auto ch : letters) {
         for (auto word : words) {
             if (std::toupper(word[0]) == std::toupper(ch)) {
-                new_words.push_back(word);
+                list.push_back(word);
             }
         }
     }
 
-    for (size_t i {}; i < new_words.size(); ++i) {
-        std::cout << new_words[i] << " ";
+    for (size_t i {}; i < list.size(); ++i) {
+        std::cout << list[i] << " ";
     }
 }
