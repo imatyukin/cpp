@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <algorithm>
 
 std::vector<std::string> words;
 std::vector<std::string> list;
